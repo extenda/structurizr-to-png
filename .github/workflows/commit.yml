@@ -1,0 +1,31 @@
+name: commit
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: extenda/actions/gcp-secret-manager@v0
+        with:
+          service-account-key: ${{ secrets.SECRET_AUTH }}
+          secrets: |
+            DOCKER_PASSWORD: dockerhub-password
+            DOCKER_USERNAME: dockerhub-username
+
+      - name: Push to DockerHub
+        if: github.ref == 'refs/heads/master'
+        uses: extenda/actions/docker@v0
+        with:
+          image: extenda/structurizr-to-png
+          tag: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}

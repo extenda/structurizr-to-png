@@ -9,9 +9,9 @@ RUN apt-get update -qq && apt-get install -qq --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY src ./src
+COPY src ./src/
 COPY install-tools.sh .
-COPY package*.json .
+COPY package*.json ./
 
 EXPOSE 3000
 
