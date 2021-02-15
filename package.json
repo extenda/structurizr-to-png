@@ -1,0 +1,25 @@
+{
+  "name": "structurizr-to-png",
+  "version": "0.0.1-local",
+  "description": "Create PNGs from Structurizr DSL",
+  "main": "src/index.js",
+  "scripts": {
+    "postinstall": "./install-tools.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/extenda/structurizr-to-png.git"
+  },
+  "bugs": {
+    "url": "https://github.com/extenda/structurizr-to-png/issues"
+  },
+  "homepage": "https://github.com/extenda/structurizr-to-png#readme",
+  "license": "MIT",
+  "dependencies": {
+    "browser-sync": "^2.26.14",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.5.1",
+    "fast-glob": "^3.2.5",
+    "yargs": "^16.2.0"
+  }
+}

@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <title>structurizr-to-png</title>
+  <script>
+    function onLoad() {
+      if (location.hash) {
+        showImage(location.hash.substring(1));
+      } else {
+        showImage(document.querySelector('div').id);
+      }
+    }
+
+    function showImage(id) {
+      document.querySelectorAll('div').forEach(function h(d) { d.style.display = 'none'; });
+      document.getElementById(id).style.display = 'block';
+      document.querySelectorAll('a').forEach(function n(a) { a.style.fontWeight = ''; });
+      document.getElementById('nav.' + id).style.fontWeight = 'bold';
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    img {
+      display: block;
+      margin: auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  </style>
+</head>
+<body onLoad="onLoad()">
+<ul>
+@NAVBAR@
+</ul>
+<hr>
+@IMAGES@
+</body>
+</html>
