@@ -1,4 +1,5 @@
 const glob = require('fast-glob');
+const chalk = require('chalk');
 const { allDslToPng, setOutputDir } = require('./dsl-to-png');
 const opts = require('./opts');
 const watch = require('./watch');
@@ -11,6 +12,11 @@ process.once('SIGINT', () => {
 (async () => {
   // Find all dsl files from the working directory.
   const dslFiles = glob.sync(['**/*.dsl', '!**/node_modules']);
+
+  if (dslFiles.length === 0) {
+    console.log(chalk.red('No DSL files found matching **/*.dsl'));
+    process.exit(0);
+  }
 
   await allDslToPng(dslFiles);
 
