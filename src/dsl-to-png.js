@@ -38,7 +38,7 @@ const allDslToPng = async (dslFiles) => {
         // only process each working directory once.
         if (!visitedDirs.has(dslEntry.uniqueWorkDir)) {
           visitedDirs.add(dslEntry.uniqueWorkDir);
-          return processPuml(dslEntry).then(plantUml);
+          return processPuml(dslEntry).then(e => plantUml(e, true));
         }
         return dslEntry;
       }));
