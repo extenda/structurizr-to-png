@@ -28,12 +28,15 @@ const processJson = async (dslEntry) => {
     .then(JSON.parse)
     .then(data => {
       Object.keys(data.model).forEach((type) => {
-        data.model[type].forEach((element) => {
-          enhanceElement(element);
-          if (element.containers) {
-            element.containers.forEach(enhanceElement)
-          }
-        });
+        const elements = data.model[type];
+        if (Array.isArray(elements)) {
+          elements.forEach((element) => {
+            enhanceElement(element);
+            if (element.containers) {
+              element.containers.forEach(enhanceElement)
+            }
+          });
+        }
       });
       return JSON.stringify(data, null, 2);
     }).then(json => writeFile(jsonFile, json, 'utf8'))
