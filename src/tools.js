@@ -1,4 +1,5 @@
 const path = require('path');
+const glob = require('fast-glob');
 const chalk = require('chalk');
 const fs = require('fs');
 const util = require('util');
@@ -40,8 +41,9 @@ const plantUml = async (dslEntry, removeImages = false) => {
   const { dslFile, uniqueWorkDir, imageOutDir } = dslEntry;
   logDsl(dslFile, `Create PNGs ${chalk.cyan(imageOutDir)}`);
 
-  if (removeImages && fs.existsSync(imageOutDir)) {
-    fs.rmdirSync(imageOutDir, { recursive: true });
+  if (removeImages) {
+    glob.sync(`${imageOutDir}/structurizr-*.png`)
+      .forEach(fs.unlinkSync);
   }
 
   return mkdir(imageOutDir, { recursive: true }).then(
