@@ -84,7 +84,7 @@ The examples are created from [demo.dsl](demo.dsl).
 ![System context](images/structurizr-PriceTracker-SystemContext.png)
 
 ## Containers
-![Container view](images/structurizr-PriceTracker-SystemContext.png)
+![Container view](images/structurizr-PriceTracker-Container.png)
 
 # :balance_scale: License
 
