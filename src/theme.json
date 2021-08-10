@@ -1,0 +1,66 @@
+{
+  "name": "dsl-to-png theme",
+  "elements": [
+    {
+      "tag": "Element",
+      "shape": "RoundedBox"
+    },
+    {
+      "tag": "Software System",
+      "background": "#1168bd",
+      "color": "#ffffff",
+      "stroke": "#3c7fc0"
+    },
+    {
+      "tag": "Container",
+      "background": "#438dd5",
+      "color": "#ffffff",
+      "stroke": "#3c7fc0"
+    },
+    {
+      "tag": "Component",
+      "background": "#85bbf0",
+      "color": "#000000",
+      "stroke": "#78a8d8"
+    },
+    {
+      "tag": "Person",
+      "background": "#08427b",
+      "color": "#ffffff",
+      "stroke": "#073b6f",
+      "shape": "Person"
+    },
+    {
+      "tag": "Database",
+      "shape": "Cylinder"
+    },
+    {
+      "tag": "Topic",
+      "shape": "Pipe"
+    },
+    {
+      "tag": "Subscription",
+      "shape": "Pipe"
+    },
+    {
+      "tag": "Pub/Sub",
+      "shape": "Pipe"
+    },
+    {
+      "tag": "Queue",
+      "shape": "Pipe"
+    },
+    {
+      "tag": "External",
+      "background": "#999999",
+      "color": "#ffffff",
+      "stroke": "#8a8a8a"
+    },
+    {
+      "tag": "Existing System",
+      "background": "#999999",
+      "color": "#ffffff",
+      "stroke": "#8a8a8a"
+    }
+  ]
+}

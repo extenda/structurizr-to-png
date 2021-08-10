@@ -9,11 +9,10 @@ to render Structurizr DSL to PNG images. It performs some processing in the inte
 
   * Create PNGs from DSL files
   * Live preview of PNGs in your browser
-<!--  * Available as a GitHub Action -->
 
 # Usage
 
-The project is intended to be used locally while authoring diagrams and also in GitHub Action workflows to automatically update diagrams in the source repository and READMEs.
+The project is intended to be used locally while authoring diagrams and in build pipelines workflows to automatically update diagrams in the source repository and READMEs.
 
 ## :whale: Docker
 
