@@ -11,6 +11,7 @@ workspace {
       app = container "Mobile App" "An Android app to track prices" "React Native"
       db = container "Database" "User profile data" "CouchDB" "Database"
       bff = container "App Backend" "Backend for the app" "Node JS"
+      topic = container "ptr.public.event.price-changed" "Topic for price changed events" "Cloud Pub/Sub" "Topic"
     }
 
     user -> app "Uses"
@@ -20,6 +21,7 @@ workspace {
     bff -> db "Read/Write" "TCP"
     bff -> search "Search" "HTTP, GraphQL"
     bff -> priceRunner "Search" "HTTP"
+    bff -> topic "Publishes events" "Pub/Sub"
   }
 
   views {
@@ -31,4 +33,6 @@ workspace {
       include *
     }
   }
+
+
 }
