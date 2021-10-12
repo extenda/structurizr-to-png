@@ -15,7 +15,8 @@ const logDsl = (dslFile, message) => {
 const structurizr = async (format, outputDir, inputFile) => {
   const args = [
     'java',
-    '-jar', path.join(libDir, 'structurizr.jar'),
+    '-cp', path.join(libDir, 'structurizr') + ':' + path.join(libDir, 'structurizr', '*'),
+    'com.structurizr.cli.StructurizrCliApplication',
     'export',
     '-f', format,
     '-o', `"${outputDir}"`,
