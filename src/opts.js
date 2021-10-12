@@ -14,10 +14,16 @@ const argv = yargs(hideBin(process.argv))
     type: 'boolean',
     default: false,
     description: 'Watch for changed DSL files.'
+  }).option('path', {
+    alias: 'p',
+    type: 'string',
+    default: '**/*.dsl',
+    description: 'Path to workspaces to render. Glob is supported'
   }).argv;
 
 module.exports = {
   workDir: path.resolve(__dirname, '..', '.work'),
   outputDir: argv.output,
   watch: argv.watch,
+  path: argv.path
 }
