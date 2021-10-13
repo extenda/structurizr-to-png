@@ -14,7 +14,7 @@ process.once('SIGINT', () => {
   const dslFiles = glob.sync([opts.path, '!**/node_modules']);
 
   if (dslFiles.length === 0) {
-    console.log(chalk.red('No DSL files found matching *.dsl'));
+    console.log(chalk.red('No DSL files found matching ' + opts.path));
     process.exit(0);
   }
 
