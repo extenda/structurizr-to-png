@@ -20,7 +20,13 @@ The project is intended to be used locally while authoring diagrams and in build
 $ docker run --rm -it -v $(pwd):/docs extenda/structurizr-to-png
 ```
 
-The convention is to generate diagrams to an `images/` directory inside the working directory. The default working directory used in the container is `/docs`. The above command will render all `*.dsl` files in the current working directory.
+The convention is to generate diagrams to an `images/` directory inside the working directory. The default working directory used in the container is `/docs`. The above command will render all `*.dsl` files in the current working directory and it's subdirectories.
+
+To render particular dsl files, use the `--path` option (glob is supported). Relative paths are treated from DSL file directory.
+
+```bash
+$ docker run --rm -it -v $(pwd):/docs extenda/structurizr-to-png --path workspace.ecd.dsl
+```
 
 To change the default output location, use the `--output` option. If specified as a relative path, it is resolved from DSL file directory.
 
