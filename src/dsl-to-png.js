@@ -29,18 +29,20 @@ const singleDslToPng = async (dslFile) => {
 };
 
 const allDslToPng = async (dslFiles) => {
+  let promises = [];
   const visitedDirs = new Set();
-  const promises = dslFiles.map(dslFile => dslToPuml(createDslEntry(dslFile))
+  dslFiles.forEach(dslFile => {
+    promises.push(dslToPuml(createDslEntry(dslFile))
       .then((dslEntry) => {
         // PUML files are processed per directory so we
         // only process each working directory once.
         if (!visitedDirs.has(dslEntry.uniqueWorkDir)) {
           visitedDirs.add(dslEntry.uniqueWorkDir);
-          return processPuml(dslEntry)
-              .then(e => plantUml(e, true));
+          return processPuml(dslEntry).then(e => plantUml(e, true));
         }
         return dslEntry;
       }));
+  });
   return Promise.all(promises);
 };
 

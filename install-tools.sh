@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -e
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-rm -rf "$SCRIPT_PATH/lib"
 mkdir -p "$SCRIPT_PATH/lib"
 
-plantUmlVersion="1.2021.12"
+plantUmlVersion="1.2021.9"
 curl -sS "https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml/$plantUmlVersion/plantuml-${plantUmlVersion}.jar" -o "$SCRIPT_PATH/lib/plantuml.jar"
 
 structurizrVersion="1.15.0"
