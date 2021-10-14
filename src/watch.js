@@ -5,6 +5,7 @@ const fg = require('fast-glob');
 const bs = require('browser-sync').create();
 const { createDslEntry, singleDslToPng } = require('./dsl-to-png');
 const { workDir, outputDir } = require('./opts.js');
+const log = require('./logger');
 
 const createIndexPage = (images, filename) => {
   const imgTags = [];
@@ -33,10 +34,8 @@ const createWebroot = () => {
 
 const changeHandler = (event, filename) => {
   if (filename && event === 'change') {
-    // TODO Log something
-    console.log('Process', event, filename);
     singleDslToPng(filename).catch((err) => {
-      console.error(err.message);
+      log.error(err.message);
     })
   }
 };
@@ -48,7 +47,7 @@ const watch = (dslFiles) => {
   const watcher = chokidar.watch(dslFiles, { persistent: true });
   watcher.on('change', (path) => {
     singleDslToPng(path).catch((err) => {
-      console.error(err.message);
+      log.error(err.message);
     });
   });
 
