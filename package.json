@@ -16,12 +16,10 @@
   "homepage": "https://github.com/extenda/structurizr-to-png#readme",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.23.0",
     "browser-sync": "^2.26.14",
     "chalk": "^4.1.0",
     "chokidar": "^3.5.1",
     "fast-glob": "^3.2.5",
-    "plantuml-encoder": "^1.4.0",
     "yargs": "^16.2.0"
   }
 }
