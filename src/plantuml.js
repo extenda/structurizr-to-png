@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const { spawn } = require('child_process');
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs');
 const axios = require('axios');
 const plantUmlEncoder = require('plantuml-encoder');
 const log = require('./logger');
@@ -37,15 +37,14 @@ const renderPng = async (pumlFile) => {
   // Wait for PlantUML to be ready for requests.
   await serverReady;
 
-  return fs.readFile(pumlFile, 'utf8')
-    .then(plantUmlEncoder.encode)
-    .then((data) => axios.get(
+  const data = plantUmlEncoder.encode(fs.readFileSync(pumlFile, 'utf8'));
+  return axios.get(
     `http://127.0.0.1:8888/plantuml/png/${data}`,
     { responseType: 'arraybuffer' },
     ).then((response) => ({
       imageName: path.basename(pumlFile, '.puml') + '.png',
       data: response.data
-    })));
+    }));
 }
 
 module.exports = {
