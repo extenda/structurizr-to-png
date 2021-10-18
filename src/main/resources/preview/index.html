@@ -33,11 +33,11 @@
       document.getElementById('navbar').appendChild(li);
     }
 
-  	const eb = new EventBus('/eventbus');
-  	eb.enableReconnect(true);
-  	eb.onopen = function onopen() {
-  		eb.registerHandler('preview.init', function handle(error, message) {
-  		  // Remove existing nodes
+    const eb = new EventBus('/eventbus');
+    eb.enableReconnect(true);
+    eb.onopen = function onopen() {
+      eb.registerHandler('preview.init', function handle(error, message) {
+        // Remove existing nodes
         if (message.body.images) {
           removeNodes(document.querySelectorAll("#images > div"));
           removeNodes(document.querySelectorAll("#navbar > li"));
@@ -53,9 +53,9 @@
         if (images.length > 0) {
           showImage(images[0].getAttribute('id'));
         }
-  		});
-  		eb.registerHandler('preview.changed', function handle(error, message) {
-  			Object.keys(message.body.images).forEach(function each(name) {
+      });
+      eb.registerHandler('preview.changed', function handle(error, message) {
+        Object.keys(message.body.images).forEach(function each(name) {
           const image = message.body.images[name];
           const imgDiv = document.getElementById(name);
           if (imgDiv) {
@@ -65,8 +65,8 @@
             createNavLink(name);
           }
         });
-  		});
-  	};
+      });
+    };
 
   </script>
   <style>

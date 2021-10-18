@@ -1,5 +1,9 @@
 package com.extendaretail.dsl2png;
 
+import com.structurizr.Workspace;
+import com.structurizr.dsl.StructurizrDslParserException;
+import com.structurizr.io.Diagram;
+import com.structurizr.io.plantuml.AbstractPlantUMLExporter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,19 +13,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.structurizr.Workspace;
-import com.structurizr.dsl.StructurizrDslParserException;
-import com.structurizr.io.Diagram;
-import com.structurizr.io.plantuml.AbstractPlantUMLExporter;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Export a Structurizr DSL to PNG images. The exporter uses C4PlantUML to create PNG images.
- * 
+ *
  * @author sasjo
  */
 public class PngExporter {
@@ -57,9 +57,10 @@ public class PngExporter {
       imageOutputDir.mkdirs();
       log.debug("Export PNGs to {}", imageOutputDir);
       AbstractPlantUMLExporter exporter = new C4PlantUMLDynamicLegendExporter();
-      ExportResult result = exporter.export(workspace).parallelStream()
-          .map((diagram) -> writePngImage(diagram, dslFile, imageOutputDir))
-          .reduce(new ExportResult(true), ExportResult::merge);
+      ExportResult result =
+          exporter.export(workspace).parallelStream()
+              .map((diagram) -> writePngImage(diagram, dslFile, imageOutputDir))
+              .reduce(new ExportResult(true), ExportResult::merge);
 
       log.info("Exported {} images {}", result.getImages().size(), durationMillis(t0));
       return result;
@@ -106,7 +107,7 @@ public class PngExporter {
     /**
      * Merge two results. The method returns a new result. If one of the results is a failure, the
      * merged result will always be a failure.
-     * 
+     *
      * @param a the first result
      * @param b the second result
      * @return a new result which is the combination of the two.

@@ -1,28 +1,23 @@
 package com.extendaretail.dsl2png;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.model.Location;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.ThemeUtils;
-import io.vertx.core.json.JsonObject;
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Load a decorated workspace from a DSL file.
- * 
+ *
  * @author sasjo
  */
 public class WorkspaceReader {
@@ -35,14 +30,15 @@ public class WorkspaceReader {
   private static final Set<String> EXTERNAL_TAGS =
       Set.of("external", "existing system", "external system");
 
-  /**
-   * Predicate to check if a software system is tagged as existing or external.
-   */
-  private final Predicate<SoftwareSystem> hasExternalTag = (s) -> {
-    Set<String> tags = Stream.of(s.getTags().toLowerCase().split(",")).map(String::trim)
-        .collect(Collectors.toSet());
-    return EXTERNAL_TAGS.stream().anyMatch(tags::contains);
-  };
+  /** Predicate to check if a software system is tagged as existing or external. */
+  private final Predicate<SoftwareSystem> hasExternalTag =
+      (s) -> {
+        Set<String> tags =
+            Stream.of(s.getTags().toLowerCase().split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+        return EXTERNAL_TAGS.stream().anyMatch(tags::contains);
+      };
 
   private WorkspaceReader() {}
 
@@ -71,8 +67,11 @@ public class WorkspaceReader {
   }
 
   private void setExternalLocation(Workspace workspace) {
-    workspace.getModel().getSoftwareSystems().stream().filter(hasExternalTag).forEach((s) -> {
-      s.setLocation(Location.External);
-    });
+    workspace.getModel().getSoftwareSystems().stream()
+        .filter(hasExternalTag)
+        .forEach(
+            (s) -> {
+              s.setLocation(Location.External);
+            });
   }
 }

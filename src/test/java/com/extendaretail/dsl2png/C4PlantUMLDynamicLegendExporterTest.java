@@ -2,11 +2,12 @@ package com.extendaretail.dsl2png;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.util.Collection;
-import org.junit.jupiter.api.Test;
+
 import com.structurizr.Workspace;
 import com.structurizr.io.Diagram;
 import com.structurizr.model.SoftwareSystem;
+import java.util.Collection;
+import org.junit.jupiter.api.Test;
 
 public class C4PlantUMLDynamicLegendExporterTest {
 

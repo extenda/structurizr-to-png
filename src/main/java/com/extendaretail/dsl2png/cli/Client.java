@@ -1,9 +1,5 @@
 package com.extendaretail.dsl2png.cli;
 
-import java.io.File;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.extendaretail.dsl2png.FileGlobber;
 import com.extendaretail.dsl2png.FileWatcher;
 import com.extendaretail.dsl2png.PngExporter;
@@ -12,6 +8,10 @@ import com.extendaretail.dsl2png.cli.Arguments.HelpException;
 import com.extendaretail.dsl2png.vertx.MainVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import java.io.File;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Client {
 
@@ -46,7 +46,7 @@ public class Client {
     Vertx vertx = Vertx.vertx(new VertxOptions().setWorkerPoolSize(2));
     MainVerticle mainVerticle = new MainVerticle(args.getOutput());
     vertx.deployVerticle(mainVerticle);
-    
+
     exporter.setOutputDirectory(args.getOutput());
     List<File> files = globber.match(args.getPath());
 
@@ -55,19 +55,28 @@ public class Client {
       return false;
     }
 
-    ExportResult result = files.parallelStream().map(exporter::export)
-        .reduce(new ExportResult(true), ExportResult::merge);
+    ExportResult result =
+        files.parallelStream()
+            .map(exporter::export)
+            .reduce(new ExportResult(true), ExportResult::merge);
 
     if (args.isWatch()) {
       mainVerticle.previewFiles(files);
 
-      watcher.watch(files, (f) -> {
-        ExportResult r = exporter.export(f);
-        if (r.isSuccess()) {
-          vertx.runOnContext(v -> vertx.eventBus().publish("preview.changed",
-              MainVerticle.imagesEvent("changed", r.getImages())));
-        }
-      });
+      watcher.watch(
+          files,
+          (f) -> {
+            ExportResult r = exporter.export(f);
+            if (r.isSuccess()) {
+              vertx.runOnContext(
+                  v ->
+                      vertx
+                          .eventBus()
+                          .publish(
+                              "preview.changed",
+                              MainVerticle.imagesEvent("changed", r.getImages())));
+            }
+          });
       return true;
     } else {
       return result.isSuccess();

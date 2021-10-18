@@ -2,9 +2,9 @@ package com.extendaretail.dsl2png;
 
 import static java.nio.file.StandardOpenOption.*;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.reflect.Method;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -18,8 +18,12 @@ import org.junit.jupiter.api.TestInfo;
 public class DslFileTestBase {
 
   private File testDir(TestInfo testInfo) {
-    return new File("target/dslFiles/" + testInfo.getTestMethod().map(Method::getName)
-        .orElseThrow(() -> new IllegalStateException("Missing test method name")));
+    return new File(
+        "target/dslFiles/"
+            + testInfo
+                .getTestMethod()
+                .map(Method::getName)
+                .orElseThrow(() -> new IllegalStateException("Missing test method name")));
   }
 
   @BeforeEach
@@ -28,7 +32,9 @@ public class DslFileTestBase {
   }
 
   public File createValidDsl(TestInfo testInfo) throws IOException {
-    return Files.writeString(new File(testDir(testInfo), "valid.dsl").toPath(), """
+    return Files.writeString(
+            new File(testDir(testInfo), "valid.dsl").toPath(),
+            """
         workspace {
           model {
             user = person "User" "A user"
@@ -49,11 +55,16 @@ public class DslFileTestBase {
             }
           }
         }
-        """, CREATE, TRUNCATE_EXISTING).toFile();
+        """,
+            CREATE,
+            TRUNCATE_EXISTING)
+        .toFile();
   }
 
   public File createInvalidDsl(TestInfo testInfo) throws IOException {
-    return Files.writeString(new File(testDir(testInfo), "invalid.dsl").toPath(), """
+    return Files.writeString(
+            new File(testDir(testInfo), "invalid.dsl").toPath(),
+            """
         workspace {
           model {
             user = personX "User" "A user"
@@ -65,24 +76,30 @@ public class DslFileTestBase {
             }
           }
         }
-        """, CREATE, TRUNCATE_EXISTING).toFile();
+        """,
+            CREATE,
+            TRUNCATE_EXISTING)
+        .toFile();
   }
 
   @AfterEach
   public void removeFiles(TestInfo testInfo) throws IOException {
-    Files.walkFileTree(testDir(testInfo).toPath(), new SimpleFileVisitor<Path>() {
-      @Override
-      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        Files.delete(file);
-        return FileVisitResult.CONTINUE;
-      }
+    Files.walkFileTree(
+        testDir(testInfo).toPath(),
+        new SimpleFileVisitor<Path>() {
+          @Override
+          public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+              throws IOException {
+            Files.delete(file);
+            return FileVisitResult.CONTINUE;
+          }
 
-      @Override
-      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-        Files.delete(dir);
-        return FileVisitResult.CONTINUE;
-      }
-    });
+          @Override
+          public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            Files.delete(dir);
+            return FileVisitResult.CONTINUE;
+          }
+        });
     Files.deleteIfExists(testDir(testInfo).toPath());
   }
 }

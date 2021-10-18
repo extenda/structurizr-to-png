@@ -42,23 +42,40 @@ public class Arguments {
     PrintWriter writer = new PrintWriter(out);
     HelpFormatter fmt = new HelpFormatter();
 
-    fmt.printHelp(writer, HELP_WIDTH, "java -jar structurizr-to-png.jar",
-        "Create PNG files from Structurizr DSL", opts, fmt.getLeftPadding(), fmt.getDescPadding(),
-        "", true);
-    
+    fmt.printHelp(
+        writer,
+        HELP_WIDTH,
+        "java -jar structurizr-to-png.jar",
+        "Create PNG files from Structurizr DSL",
+        opts,
+        fmt.getLeftPadding(),
+        fmt.getDescPadding(),
+        "",
+        true);
+
     return out.toString();
   }
-  
-  
 
   public static Arguments parse(String[] args) throws HelpException {
     Options opts = new Options();
-    opts.addOption(Option.builder("o").longOpt("output").hasArg().argName("dir").type(String.class)
-        .desc("Image output directory. A relative path is resolved from the DSL file.").build());
+    opts.addOption(
+        Option.builder("o")
+            .longOpt("output")
+            .hasArg()
+            .argName("dir")
+            .type(String.class)
+            .desc("Image output directory. A relative path is resolved from the DSL file.")
+            .build());
     opts.addOption(
         Option.builder("w").longOpt("watch").desc("Watch for changed DSL files.").build());
-    opts.addOption(Option.builder("p").longOpt("path").hasArg().argName("glob").type(String.class)
-        .desc("Path to workspaces to render. Glob is supported.").build());
+    opts.addOption(
+        Option.builder("p")
+            .longOpt("path")
+            .hasArg()
+            .argName("glob")
+            .type(String.class)
+            .desc("Path to workspaces to render. Glob is supported.")
+            .build());
     opts.addOption(Option.builder().longOpt("help").build());
 
     Arguments arguments = new Arguments();

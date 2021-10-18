@@ -5,7 +5,7 @@ import org.slf4j.MDC;
 
 class DslFileMDC implements AutoCloseable {
 
-  private final static String KEY = "dsl";
+  private static final String KEY = "dsl";
 
   private String oldValue;
   private String newValue;

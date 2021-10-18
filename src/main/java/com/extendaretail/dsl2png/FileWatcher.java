@@ -40,7 +40,7 @@ public class FileWatcher {
   /**
    * Watch the file system for changes to the selected paths. This method will block the calling
    * thread until the program is interrupted.
-   * 
+   *
    * @param files the DSL files to watch
    * @param onChange the consumer to invoke with the changed files
    */
@@ -62,11 +62,17 @@ public class FileWatcher {
       WatchKey key;
       while ((key = watcher.take()) != null) {
         Path parent = (Path) key.watchable();
-        key.pollEvents().stream().map(WatchEvent::context).map(Path.class::cast)
-            .map(parent::resolve).filter(paths::contains).map(Path::toFile).forEach((f) -> {
-              log.debug("{} changed", f);
-              onChange.accept(f);
-            });
+        key.pollEvents().stream()
+            .map(WatchEvent::context)
+            .map(Path.class::cast)
+            .map(parent::resolve)
+            .filter(paths::contains)
+            .map(Path::toFile)
+            .forEach(
+                (f) -> {
+                  log.debug("{} changed", f);
+                  onChange.accept(f);
+                });
         key.reset();
       }
     } catch (InterruptedException e) {

@@ -6,7 +6,7 @@ import com.structurizr.view.View;
 
 /**
  * A {@link C4PlantUMLExporter} that uses the {@code SHOW_DYNAMIC_LEGEND()} footer.
- * 
+ *
  * @author sasjo
  */
 public class C4PlantUMLDynamicLegendExporter extends C4PlantUMLExporter {

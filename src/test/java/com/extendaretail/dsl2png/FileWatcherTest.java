@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -65,9 +66,10 @@ public class FileWatcherTest {
     when(key.pollEvents()).thenReturn(Arrays.asList(event));
     when(ws.take()).thenReturn(key).thenReturn(null);
 
-    executor.execute(() -> {
-      watcher.watch(Arrays.asList(mockPath.toFile()), f -> changes.add(f));
-    });
+    executor.execute(
+        () -> {
+          watcher.watch(Arrays.asList(mockPath.toFile()), f -> changes.add(f));
+        });
 
     File changed = changes.poll(500, TimeUnit.MILLISECONDS);
     assertEquals(mockFile, changed);

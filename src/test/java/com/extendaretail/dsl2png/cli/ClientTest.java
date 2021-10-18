@@ -9,20 +9,17 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import java.io.File;
-import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
+
 import com.extendaretail.dsl2png.FileGlobber;
 import com.extendaretail.dsl2png.FileWatcher;
 import com.extendaretail.dsl2png.PngExporter;
 import com.extendaretail.dsl2png.PngExporter.ExportResult;
+import java.io.File;
+import java.util.Arrays;
+import java.util.function.Consumer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 public class ClientTest {
 
@@ -38,8 +35,9 @@ public class ClientTest {
 
     File file = new File("./demo.dsl");
     when(globber.match(anyString())).thenReturn(Arrays.asList(file));
-    when(exporter.export(any(File.class))).thenReturn(
-        new ExportResult(true, new File[] {new File(file.getParent(), "images/test.png")}));
+    when(exporter.export(any(File.class)))
+        .thenReturn(
+            new ExportResult(true, new File[] {new File(file.getParent(), "images/test.png")}));
   }
 
   @Test
@@ -53,16 +51,16 @@ public class ClientTest {
   @Test
   public void watch() {
     Client cli = new Client(exporter, globber, watcher);
-    
+
     ArgumentCaptor<Consumer<File>> captor = ArgumentCaptor.forClass(Consumer.class);
     doNothing().when(watcher).watch(any(), any(Consumer.class));
 
     boolean result = cli.run(new String[] {"--watch"});
-    
+
     verify(watcher, timeout(500)).watch(any(), captor.capture());
     captor.getValue().accept(new File("./demo.dsl"));
     verify(exporter, times(2)).export(new File("./demo.dsl"));
-    
+
     assertTrue(result, () -> "Expected success, was failure");
   }
 
@@ -72,5 +70,4 @@ public class ClientTest {
     boolean result = cli.run(new String[] {"--help"});
     assertTrue(result, () -> "--help should exit with 0");
   }
-
 }
