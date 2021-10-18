@@ -1,0 +1,12 @@
+<configuration debug="false">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <withJansi>true</withJansi>
+    <encoder>
+      <pattern>[%highlight(%level)] %cyan(%X{dsl:-*}) %msg%n%ex{SHORT}</pattern>
+    </encoder>
+  </appender>
+  <logger name="com.extendaretail" level="INFO"/>
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

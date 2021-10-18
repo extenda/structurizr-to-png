@@ -2,13 +2,23 @@
 <html>
 <head>
   <title>structurizr-to-png</title>
+  <script src="https://unpkg.io/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
   <script>
+    const sock = new SockJS('http://127.0.0.1:3000/sockjs');
+    sock.onmessage = function(e) {
+      console.log('message', e.data);
+    };
+    sock.onevent = function(event, message) {
+      console.log('event %o, message: %o', event, message);
+      return true;
+    };
+
     function onLoad() {
-      if (location.hash) {
-        showImage(location.hash.substring(1));
-      } else {
-        showImage(document.querySelector('div').id);
-      }
+      // if (location.hash) {
+      //   showImage(location.hash.substring(1));
+      // } else {
+      //   showImage(document.querySelector('div').id);
+      // }
     }
 
     function showImage(id) {

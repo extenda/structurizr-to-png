@@ -1,24 +1,12 @@
-FROM adoptopenjdk:11-jre-hotspot-bionic
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+FROM eclipse-temurin:17-centos7
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get update -qq && apt-get install -qq --no-install-recommends \
-  nodejs \
-  graphviz \
-  unzip \
-  && rm -rf /var/lib/apt/lists/*
+RUN yum -y install graphviz
 
-WORKDIR /app
-COPY src ./src/
-COPY install-tools.sh .
-COPY package*.json ./
+COPY target/lib /app/lib
+COPY target/*.jar /app
 
 EXPOSE 3000
 
-RUN npm ci \
-  && npm run postinstall \
-  && npm cache clean --force
-
 WORKDIR /docs
 
-ENTRYPOINT ["node", "/app/src/index.js"]
+ENTRYPOINT ["/opt/java/openjdk/bin/java", "-jar", "/app/structurizr-to-png.jar"]
