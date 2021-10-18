@@ -140,15 +140,17 @@
         <version>2.22.2</version>
         <configuration>
           <argLine>@{argLine} -Dfile.encoding=UTF-8 --illegal-access=permit</argLine>
+          <!--
           <parallel>all</parallel>
           <useUnlimitedThreads>true</useUnlimitedThreads>
           <properties>
             <configurationParameters>
               junit.jupiter.execution.parallel.enabled = false
-              junit.jupiter.execution.parallel.mode.default = concurrent
-              junit.jupiter.execution.parallel.mode.classes.default = concurrent
+              #junit.jupiter.execution.parallel.mode.default = concurrent
+              #junit.jupiter.execution.parallel.mode.classes.default = concurrent
             </configurationParameters>
           </properties>
+          -->
         </configuration>
       </plugin>
        <plugin>
