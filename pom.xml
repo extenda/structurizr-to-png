@@ -13,12 +13,30 @@
     <tag>HEAD</tag>
   </scm>
 
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <email>samuel.sjoberg@extendaretail.com</email>
+      <name>Samuel Sjoberg</name>
+      <url>https://github.com/sasjo</url>
+      <id>sasjo</id>
+    </developer>
+  </developers>
+
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>17</java.version>
     <java.source.version>${java.version}</java.source.version>
     <java.target.version>${java.version}</java.target.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <sonar.junit.reportPaths>${project.build.directory}/surefire-reports</sonar.junit.reportPaths>
   </properties>
 
   <dependencyManagement>
@@ -121,7 +139,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 --illegal-access=permit</argLine>
+          <argLine>@{argLine} -Dfile.encoding=UTF-8 --illegal-access=permit</argLine>
           <parallel>all</parallel>
           <useUnlimitedThreads>true</useUnlimitedThreads>
           <properties>
@@ -132,6 +150,35 @@
             </configurationParameters>
           </properties>
         </configuration>
+      </plugin>
+       <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.7</version>
+        <executions>
+          <execution>
+            <id>jacoco-surefire</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <destFile>${project.build.directory}/jacoco.exec</destFile>
+              <append>true</append>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jacoco-report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
