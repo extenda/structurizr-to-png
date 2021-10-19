@@ -45,39 +45,36 @@ public class FileWatcher {
    * @param onChange the consumer to invoke with the changed files
    */
   public void watch(List<File> files, Consumer<File> onChange) {
-    WatchService watcher;
-    try {
-      watcher = fs.newWatchService();
+    try (WatchService watcher = fs.newWatchService()) {
+      Set<Path> paths = files.stream().map(File::toPath).collect(Collectors.toSet());
+      paths.forEach((file) -> register(file, watcher));
+
+      log.info("Watching files... Ctrl+C to exit.");
+
+      try {
+        WatchKey key;
+        while ((key = watcher.take()) != null) {
+          Path parent = (Path) key.watchable();
+          key.pollEvents().stream()
+              .map(WatchEvent::context)
+              .map(Path.class::cast)
+              .map(parent::resolve)
+              .filter(paths::contains)
+              .map(Path::toFile)
+              .forEach(
+                  (f) -> {
+                    log.debug("{} changed", f);
+                    onChange.accept(f);
+                  });
+          key.reset();
+        }
+      } catch (InterruptedException e) {
+        log.trace("File watcher interrupted.", e);
+        Thread.currentThread().interrupt();
+        return;
+      }
     } catch (IOException e) {
       log.error("Failed to create file watcher", e);
-      return;
-    }
-
-    Set<Path> paths = files.stream().map(File::toPath).collect(Collectors.toSet());
-    paths.forEach((file) -> register(file, watcher));
-
-    log.info("Watching files... Ctrl+C to exit.");
-
-    try {
-      WatchKey key;
-      while ((key = watcher.take()) != null) {
-        Path parent = (Path) key.watchable();
-        key.pollEvents().stream()
-            .map(WatchEvent::context)
-            .map(Path.class::cast)
-            .map(parent::resolve)
-            .filter(paths::contains)
-            .map(Path::toFile)
-            .forEach(
-                (f) -> {
-                  log.debug("{} changed", f);
-                  onChange.accept(f);
-                });
-        key.reset();
-      }
-    } catch (InterruptedException e) {
-      log.trace("File watcher interrupted.", e);
-      Thread.currentThread().interrupt();
       return;
     }
   }
