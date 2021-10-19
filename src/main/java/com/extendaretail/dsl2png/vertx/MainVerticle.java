@@ -1,6 +1,7 @@
 package com.extendaretail.dsl2png.vertx;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.bridge.BridgeEventType;
 import io.vertx.ext.bridge.PermittedOptions;
@@ -103,7 +104,7 @@ public class MainVerticle extends AbstractVerticle {
   ;
 
   @Override
-  public void start() throws Exception {
+  public void start(Promise<Void> startPromise) throws Exception {
     SockJSHandler sockJSHandler =
         SockJSHandler.create(
             vertx,
@@ -144,6 +145,11 @@ public class MainVerticle extends AbstractVerticle {
     router.route("/themes/*").handler(StaticHandler.create("themes"));
 
     listenPort = config().getInteger("http.port", 3000);
-    vertx.createHttpServer().requestHandler(router).listen(listenPort);
+    vertx
+        .createHttpServer()
+        .requestHandler(router)
+        .listen(listenPort)
+        .<Void>mapEmpty()
+        .onComplete(startPromise);
   }
 }
