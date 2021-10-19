@@ -32,8 +32,8 @@ public class PngExporter {
   private WorkspaceReader workspaceReader;
   private SourceStringReaderFactory plantUmlFactory;
 
-  public PngExporter() {
-    this(new WorkspaceReader(3000), SourceStringReader::new);
+  public PngExporter(int themesPort) {
+    this(new WorkspaceReader(themesPort), SourceStringReader::new);
   }
 
   public PngExporter(WorkspaceReader workspaceReader, SourceStringReaderFactory plantUmlFactory) {
@@ -54,7 +54,6 @@ public class PngExporter {
 
   public ExportResult export(File dslFile) {
     try (DslFileMDC c = new DslFileMDC(dslFile)) {
-      long t0 = System.currentTimeMillis();
       Workspace workspace;
       try {
         workspace = workspaceReader.loadFromDsl(dslFile);
@@ -62,8 +61,6 @@ public class PngExporter {
         log.error("Invalid DSL: {}", e.getMessage(), e);
         return new ExportResult(false, Collections.emptyList());
       }
-
-      log.debug("Loaded {}", durationMillis(t0));
 
       File imageOutputDir = getOutputDirectory(dslFile);
       imageOutputDir.mkdirs();
@@ -74,7 +71,7 @@ public class PngExporter {
               .map(diagram -> writePngImage(diagram, dslFile, imageOutputDir))
               .reduce(new ExportResult(true), ExportResult::merge);
 
-      log.info("Exported {} images {}", result.getImages().size(), durationMillis(t0));
+      log.info("Exported {} images", result.getImages().size());
       return result;
     }
   }
@@ -92,7 +89,9 @@ public class PngExporter {
         log.error("Failed to write {}", pngFile, e);
         return new ExportResult(false, pngFile);
       }
-      log.info("{} {}", pngFile, durationMillis(t0));
+      if (log.isInfoEnabled()) {
+        log.info("{} {}", pngFile, durationMillis(t0));
+      }
       return new ExportResult(true, pngFile);
     }
   }

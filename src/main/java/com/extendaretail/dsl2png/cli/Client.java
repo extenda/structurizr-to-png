@@ -6,14 +6,19 @@ import com.extendaretail.dsl2png.PngExporter;
 import com.extendaretail.dsl2png.PngExporter.ExportResult;
 import com.extendaretail.dsl2png.cli.Arguments.HelpException;
 import com.extendaretail.dsl2png.vertx.MainVerticle;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.json.JsonObject;
 import java.io.File;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Client {
+
+  /** Default web server port. */
+  private static final int DEFAULT_PORT = 3000;
 
   private static Logger log = LoggerFactory.getLogger(Client.class);
 
@@ -24,7 +29,7 @@ public class Client {
   private FileWatcher watcher;
 
   public Client() {
-    this(new PngExporter(), new FileGlobber(), new FileWatcher());
+    this(new PngExporter(DEFAULT_PORT), new FileGlobber(), new FileWatcher());
   }
 
   public Client(PngExporter exporter, FileGlobber globber, FileWatcher watcher) {
@@ -45,7 +50,9 @@ public class Client {
   public boolean run(Arguments args) {
     Vertx vertx = Vertx.vertx(new VertxOptions().setWorkerPoolSize(2));
     MainVerticle mainVerticle = new MainVerticle(args.getOutput());
-    vertx.deployVerticle(mainVerticle);
+    vertx.deployVerticle(
+        mainVerticle,
+        new DeploymentOptions().setConfig(new JsonObject().put("http.port", DEFAULT_PORT)));
 
     exporter.setOutputDirectory(args.getOutput());
     List<File> files = globber.match(args.getPath());
@@ -65,7 +72,7 @@ public class Client {
 
       watcher.watch(
           files,
-          (f) -> {
+          f -> {
             ExportResult r = exporter.export(f);
             if (r.isSuccess()) {
               vertx.runOnContext(
