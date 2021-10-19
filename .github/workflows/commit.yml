@@ -34,8 +34,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-java@v2
         with:
@@ -46,6 +44,7 @@ jobs:
         uses: extenda/actions/maven@v0
         with:
           args: package -DskipTests
+          version: pom.xml
           service-account-key: ${{ secrets.SECRET_AUTH }}
 
       - uses: extenda/actions/gcp-secret-manager@v0
