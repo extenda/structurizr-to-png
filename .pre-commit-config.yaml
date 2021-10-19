@@ -11,7 +11,7 @@ repos:
     -   id: remove-crlf
     -   id: remove-tabs
         args: [ --whitespaces-count=2 ]
--   repo: git@github.com:extenda/pre-commit-hooks.git
+-   repo: git://github.com/extenda/pre-commit-hooks
     rev: v0.7
     hooks:
     -   id: google-java-formatter
