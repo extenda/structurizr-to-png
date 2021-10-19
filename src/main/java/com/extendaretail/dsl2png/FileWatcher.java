@@ -47,7 +47,7 @@ public class FileWatcher {
   public void watch(List<File> files, Consumer<File> onChange) {
     try (WatchService watcher = fs.newWatchService()) {
       Set<Path> paths = files.stream().map(File::toPath).collect(Collectors.toSet());
-      paths.forEach((file) -> register(file, watcher));
+      paths.forEach(file -> register(file, watcher));
 
       log.info("Watching files... Ctrl+C to exit.");
 
@@ -62,7 +62,7 @@ public class FileWatcher {
               .filter(paths::contains)
               .map(Path::toFile)
               .forEach(
-                  (f) -> {
+                  f -> {
                     log.debug("{} changed", f);
                     onChange.accept(f);
                   });

@@ -71,7 +71,7 @@ public class PngExporter {
       AbstractPlantUMLExporter exporter = new C4PlantUMLDynamicLegendExporter();
       ExportResult result =
           exporter.export(workspace).parallelStream()
-              .map((diagram) -> writePngImage(diagram, dslFile, imageOutputDir))
+              .map(diagram -> writePngImage(diagram, dslFile, imageOutputDir))
               .reduce(new ExportResult(true), ExportResult::merge);
 
       log.info("Exported {} images {}", result.getImages().size(), durationMillis(t0));

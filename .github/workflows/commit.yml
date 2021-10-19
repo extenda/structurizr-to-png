@@ -18,6 +18,7 @@ jobs:
           uses: extenda/actions/maven@v0
           with:
             args: verify
+            version: pom.xml
             service-account-key: ${{ secrets.SECRET_AUTH }}
 
         - name: Scan with SonarCloud
