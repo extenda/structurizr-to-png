@@ -37,6 +37,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <sonar.junit.reportPaths>${project.build.directory}/surefire-reports</sonar.junit.reportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
   <dependencyManagement>
