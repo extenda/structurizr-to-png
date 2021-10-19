@@ -29,13 +29,15 @@ public class PngExporter {
 
   private Logger log = LoggerFactory.getLogger(PngExporter.class);
   private File outputDirectory;
+  private WorkspaceReader workspaceReader;
   private SourceStringReaderFactory plantUmlFactory;
 
   public PngExporter() {
-    this(SourceStringReader::new);
+    this(new WorkspaceReader(3000), SourceStringReader::new);
   }
 
-  public PngExporter(SourceStringReaderFactory plantUmlFactory) {
+  public PngExporter(WorkspaceReader workspaceReader, SourceStringReaderFactory plantUmlFactory) {
+    this.workspaceReader = workspaceReader;
     this.plantUmlFactory = plantUmlFactory;
   }
 
@@ -55,7 +57,7 @@ public class PngExporter {
       long t0 = System.currentTimeMillis();
       Workspace workspace;
       try {
-        workspace = WorkspaceReader.loadFromDsl(dslFile);
+        workspace = workspaceReader.loadFromDsl(dslFile);
       } catch (StructurizrDslParserException | IOException e) {
         log.error("Invalid DSL: {}", e.getMessage(), e);
         return new ExportResult(false, Collections.emptyList());

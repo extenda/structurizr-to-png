@@ -28,6 +28,8 @@ public class MainVerticle extends AbstractVerticle {
   private List<File> files = new CopyOnWriteArrayList<>();
   private File outputDirectory;
 
+  private Integer listenPort = 3000;
+
   public MainVerticle(File outputDirectory) {
     this.outputDirectory = outputDirectory;
   }
@@ -56,7 +58,7 @@ public class MainVerticle extends AbstractVerticle {
    */
   public void previewFiles(List<File> files) {
     if (this.files.isEmpty()) {
-      log.info("Access URL\n\n\thttp://localhost:3000");
+      log.info("Access URL\n\n\thttp://localhost:" + listenPort);
       this.files.addAll(files);
     }
   }
@@ -141,6 +143,7 @@ public class MainVerticle extends AbstractVerticle {
 
     router.route("/themes/*").handler(StaticHandler.create("themes"));
 
-    vertx.createHttpServer().requestHandler(router).listen(3000);
+    listenPort = config().getInteger("http.port", 3000);
+    vertx.createHttpServer().requestHandler(router).listen(listenPort);
   }
 }

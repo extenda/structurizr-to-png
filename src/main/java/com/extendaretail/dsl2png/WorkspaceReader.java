@@ -24,8 +24,6 @@ public class WorkspaceReader {
 
   private static Logger log = LoggerFactory.getLogger(WorkspaceReader.class);
 
-  private static final WorkspaceReader INSTANCE = new WorkspaceReader();
-
   /** Set of element tags that indicates it is an external system. */
   private static final Set<String> EXTERNAL_TAGS =
       Set.of("external", "existing system", "external system");
@@ -40,13 +38,16 @@ public class WorkspaceReader {
         return EXTERNAL_TAGS.stream().anyMatch(tags::contains);
       };
 
-  private WorkspaceReader() {}
+  private int themePort;
 
-  public static Workspace loadFromDsl(File dslFile)
-      throws IOException, StructurizrDslParserException {
-    Workspace workspace = INSTANCE.parseDsl(dslFile);
-    INSTANCE.addTheme(workspace);
-    INSTANCE.setExternalLocation(workspace);
+  public WorkspaceReader(int themePort) {
+    this.themePort = themePort;
+  }
+
+  public Workspace loadFromDsl(File dslFile) throws IOException, StructurizrDslParserException {
+    Workspace workspace = parseDsl(dslFile);
+    addTheme(workspace);
+    setExternalLocation(workspace);
     return workspace;
   }
 
@@ -58,7 +59,10 @@ public class WorkspaceReader {
   }
 
   private void addTheme(Workspace workspace) throws IOException {
-    workspace.getViews().getConfiguration().addTheme("http://127.0.0.1:3000/themes/theme.json");
+    workspace
+        .getViews()
+        .getConfiguration()
+        .addTheme("http://127.0.0.1:" + themePort + "/themes/theme.json");
     try {
       ThemeUtils.loadThemes(workspace);
     } catch (Exception e) {

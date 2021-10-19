@@ -71,7 +71,7 @@ public class FileWatcherTest {
           watcher.watch(Arrays.asList(mockPath.toFile()), f -> changes.add(f));
         });
 
-    File changed = changes.poll(500, TimeUnit.MILLISECONDS);
+    File changed = changes.poll(2, TimeUnit.SECONDS);
     assertEquals(mockFile, changed);
 
     verify(mockParent).register(ws, StandardWatchEventKinds.ENTRY_MODIFY);

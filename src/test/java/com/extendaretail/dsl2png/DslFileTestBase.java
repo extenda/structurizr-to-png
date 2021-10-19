@@ -17,7 +17,7 @@ import org.junit.jupiter.api.TestInfo;
 
 public class DslFileTestBase {
 
-  private File testDir(TestInfo testInfo) {
+  public File testDir(TestInfo testInfo) {
     return new File(
         "target/dslFiles/"
             + testInfo

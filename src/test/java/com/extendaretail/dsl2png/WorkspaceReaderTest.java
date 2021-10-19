@@ -6,6 +6,7 @@ import com.extendaretail.dsl2png.vertx.MainVerticle;
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.model.Location;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -19,18 +20,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(VertxExtension.class)
 public class WorkspaceReaderTest extends DslFileTestBase {
 
+  private Integer httpPort;
+
   @BeforeEach
   public void setUp(Vertx vertx, VertxTestContext testContext) {
+    DeploymentOptions config = LocalPort.getLocalPort();
+    httpPort = config.getConfig().getInteger("http.port");
     vertx
-        .deployVerticle(new MainVerticle(new File("target")))
+        .deployVerticle(new MainVerticle(new File("target")), config)
         .onComplete(testContext.succeedingThenComplete());
   }
 
   @Test
-  public void dslWithValidSyntax(TestInfo testInfo, VertxTestContext testContext) throws Exception {
+  public void dslWithValidSyntax(TestInfo testInfo, Vertx verx, VertxTestContext testContext)
+      throws Exception {
     testContext.verify(
         () -> {
-          Workspace workspace = WorkspaceReader.loadFromDsl(createValidDsl(testInfo));
+          Workspace workspace = new WorkspaceReader(httpPort).loadFromDsl(createValidDsl(testInfo));
 
           assertEquals(2, workspace.getModel().getSoftwareSystems().size());
           assertEquals(2, workspace.getViews().getViews().size());
@@ -50,7 +56,7 @@ public class WorkspaceReaderTest extends DslFileTestBase {
     testContext.verify(
         () -> {
           try {
-            WorkspaceReader.loadFromDsl(createInvalidDsl(testInfo));
+            new WorkspaceReader(httpPort).loadFromDsl(createInvalidDsl(testInfo));
             testContext.failNow("Expected parse error");
           } catch (StructurizrDslParserException e) {
             assertEquals(

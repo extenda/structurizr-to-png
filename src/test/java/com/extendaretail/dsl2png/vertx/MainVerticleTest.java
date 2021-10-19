@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.extendaretail.dsl2png.DslFileTestBase;
+import com.extendaretail.dsl2png.LocalPort;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpClient;
@@ -26,18 +28,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class MainVerticleTest extends DslFileTestBase {
 
   private MainVerticle mainVerticle;
+  private Integer httpPort;
+  private DeploymentOptions config;
 
   @BeforeEach
   public void beforeEach(TestInfo testInfo) throws IOException {
     File dsl = createValidDsl(testInfo);
-    File outputDirectory = new File("./images").getCanonicalFile();
+    File outputDirectory = new File("./images").getAbsoluteFile();
     mainVerticle = new MainVerticle(outputDirectory);
     mainVerticle.previewFiles(Arrays.asList(dsl));
+
+    config = LocalPort.getLocalPort();
+    httpPort = config.getConfig().getInteger("http.port");
   }
 
   @Test
-  public void getFiles() {
-    assertEquals(1, mainVerticle.getFiles().size());
+  public void getFiles(VertxTestContext testContext) {
+    testContext.verify(
+        () -> {
+          assertEquals(1, mainVerticle.getFiles().size());
+          testContext.completeNow();
+        });
   }
 
   @Test
@@ -61,8 +72,8 @@ public class MainVerticleTest extends DslFileTestBase {
   public void serveIndexHtml(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     vertx
-        .deployVerticle(mainVerticle)
-        .compose(ignore -> client.request(HttpMethod.GET, 3000, "localhost", "/index.html"))
+        .deployVerticle(mainVerticle, config)
+        .compose(ignore -> client.request(HttpMethod.GET, httpPort, "localhost", "/index.html"))
         .compose(HttpClientRequest::send)
         .compose(HttpClientResponse::body)
         .onSuccess(
@@ -77,12 +88,12 @@ public class MainVerticleTest extends DslFileTestBase {
   public void serveImageFile(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     vertx
-        .deployVerticle(mainVerticle)
+        .deployVerticle(mainVerticle, config)
         .compose(
             ignore ->
                 client.request(
                     HttpMethod.GET,
-                    3000,
+                    httpPort,
                     "localhost",
                     "/images/structurizr-PriceTracker-SystemContext.png"))
         .compose(HttpClientRequest::send)
@@ -102,12 +113,12 @@ public class MainVerticleTest extends DslFileTestBase {
   public void serveMissingImage(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     vertx
-        .deployVerticle(mainVerticle)
+        .deployVerticle(mainVerticle, config)
         .compose(
             ignore ->
                 client.request(
                     HttpMethod.GET,
-                    3000,
+                    httpPort,
                     "localhost",
                     "/images/structurizr-Missing-SystemContext.png"))
         .compose(HttpClientRequest::send)
@@ -133,8 +144,8 @@ public class MainVerticleTest extends DslFileTestBase {
         """)
             .toBuffer();
     vertx
-        .deployVerticle(mainVerticle)
-        .compose(ignore -> client.webSocket(3000, "localhost", "/eventbus/websocket"))
+        .deployVerticle(mainVerticle, config)
+        .compose(ignore -> client.webSocket(httpPort, "localhost", "/eventbus/websocket"))
         .onSuccess(
             ws -> {
               ws.handler(

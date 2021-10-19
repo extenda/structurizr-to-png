@@ -11,10 +11,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.extendaretail.dsl2png.PngExporter.ExportResult;
-import com.extendaretail.dsl2png.vertx.MainVerticle;
-import io.vertx.core.Vertx;
-import io.vertx.junit5.VertxExtension;
-import io.vertx.junit5.VertxTestContext;
+import com.structurizr.Workspace;
+import com.structurizr.dsl.StructurizrDslParserException;
+import com.structurizr.model.SoftwareSystem;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,53 +23,51 @@ import net.sourceforge.plantuml.core.DiagramDescription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(VertxExtension.class)
 public class PngExporterTest extends DslFileTestBase {
 
   private SourceStringReader sourceStringReader;
   private PngExporter exporter;
+  private WorkspaceReader workspaceReader;
 
   @BeforeEach
-  public void setUp(Vertx vertx, VertxTestContext testContext) throws IOException {
-    vertx
-        .deployVerticle(new MainVerticle(new File("target")))
-        .onComplete(testContext.succeedingThenComplete());
-
+  public void setUp() throws IOException {
     sourceStringReader = mock(SourceStringReader.class);
     when(sourceStringReader.outputImage(any(OutputStream.class), any(FileFormatOption.class)))
         .thenReturn(new DiagramDescription("test"));
 
-    exporter = new PngExporter((source, charset) -> sourceStringReader);
+    workspaceReader = mock(WorkspaceReader.class);
+    exporter = new PngExporter(workspaceReader, (source, charset) -> sourceStringReader);
   }
 
   @Test
-  public void successfulPngExport(TestInfo testInfo, VertxTestContext testContext)
-      throws IOException {
-    testContext.verify(
-        () -> {
-          File dslFile = createValidDsl(testInfo);
-          exporter.setOutputDirectory(new File("images"));
-          ExportResult export = exporter.export(dslFile);
-          assertTrue(export.isSuccess());
-          assertEquals(2, export.getImages().size());
-          verify(sourceStringReader, times(2))
-              .outputImage(any(OutputStream.class), any(FileFormatOption.class));
-          testContext.completeNow();
-        });
+  public void successfulPngExport(TestInfo testInfo)
+      throws IOException, StructurizrDslParserException {
+    File dslFile = new File("test.dsl");
+
+    Workspace workspace = new Workspace("test", "Test");
+    SoftwareSystem testSystem = workspace.getModel().addSoftwareSystem("Test System");
+    testSystem.addContainer("Database");
+    workspace.getViews().createSystemContextView(testSystem, "TestSystem-SystemContext", null);
+    workspace.getViews().createContainerView(testSystem, "TestSystem-Container", null);
+
+    when(workspaceReader.loadFromDsl(dslFile)).thenReturn(workspace);
+
+    exporter.setOutputDirectory(new File(testDir(testInfo), "images"));
+    ExportResult export = exporter.export(dslFile);
+    assertTrue(export.isSuccess());
+    assertEquals(2, export.getImages().size());
+    verify(sourceStringReader, times(2))
+        .outputImage(any(OutputStream.class), any(FileFormatOption.class));
   }
 
   @Test
-  public void failingPngExport(TestInfo testInfo, VertxTestContext testContext) throws IOException {
-    testContext.verify(
-        () -> {
-          File dslFile = createInvalidDsl(testInfo);
-          exporter.setOutputDirectory(new File("/tmp/exporter/images"));
-          ExportResult export = exporter.export(dslFile);
-          assertFalse(export.isSuccess());
-          verifyNoInteractions(sourceStringReader);
-          testContext.completeNow();
-        });
+  public void failingPngExport() throws IOException, StructurizrDslParserException {
+    File dslFile = new File("test.dsl");
+    when(workspaceReader.loadFromDsl(dslFile)).thenThrow(new IOException("Test parse error"));
+    exporter.setOutputDirectory(new File("/tmp/exporter/images"));
+    ExportResult export = exporter.export(dslFile);
+    assertFalse(export.isSuccess());
+    verifyNoInteractions(sourceStringReader);
   }
 }
