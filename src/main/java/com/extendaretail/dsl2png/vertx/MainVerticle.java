@@ -32,13 +32,15 @@ public class MainVerticle extends AbstractVerticle {
     this.outputDirectory = outputDirectory;
   }
 
-  private List<File> listImages() {
-    return files.stream()
-        .map(
-            (f) ->
-                outputDirectory.isAbsolute()
-                    ? outputDirectory
-                    : new File(f.getParentFile(), outputDirectory.getPath()))
+  public List<File> listImages() {
+    Stream<File> stream;
+    if (outputDirectory.isAbsolute()) {
+      stream = Stream.of(outputDirectory);
+    } else {
+      stream = files.stream().map((f) -> new File(f.getParentFile(), outputDirectory.getPath()));
+    }
+
+    return stream
         .flatMap(
             (f) ->
                 Stream.of(

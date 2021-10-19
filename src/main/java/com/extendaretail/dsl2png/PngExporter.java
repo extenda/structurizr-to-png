@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,15 @@ public class PngExporter {
 
   private Logger log = LoggerFactory.getLogger(PngExporter.class);
   private File outputDirectory;
+  private SourceStringReaderFactory plantUmlFactory;
+
+  public PngExporter() {
+    this(SourceStringReader::new);
+  }
+
+  public PngExporter(SourceStringReaderFactory plantUmlFactory) {
+    this.plantUmlFactory = plantUmlFactory;
+  }
 
   public void setOutputDirectory(File outputDirectory) {
     this.outputDirectory = outputDirectory;
@@ -74,7 +84,7 @@ public class PngExporter {
           new File(imageOutputDir, String.format("structurizr-%s.png", diagram.getKey()));
       try (OutputStream os = new FileOutputStream(pngFile)) {
         SourceStringReader reader =
-            new SourceStringReader(diagram.getDefinition(), StandardCharsets.UTF_8);
+            plantUmlFactory.newInstance(diagram.getDefinition(), StandardCharsets.UTF_8);
         reader.outputImage(os, new FileFormatOption(FileFormat.PNG));
       } catch (IOException e) {
         log.error("Failed to write {}", pngFile, e);
@@ -87,6 +97,11 @@ public class PngExporter {
 
   private static String durationMillis(long t0) {
     return System.currentTimeMillis() - t0 + "ms";
+  }
+
+  @FunctionalInterface
+  public static interface SourceStringReaderFactory {
+    SourceStringReader newInstance(String definition, Charset charset);
   }
 
   public static class ExportResult {

@@ -15,8 +15,8 @@ import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -30,10 +30,7 @@ public class MainVerticleTest extends DslFileTestBase {
   @BeforeEach
   public void beforeEach(TestInfo testInfo) throws IOException {
     File dsl = createValidDsl(testInfo);
-    File outputDirectory = new File("images");
-    File image = new File(dsl.getParentFile(), "images/structurizr-Vertx-SystemContext.png");
-    Files.createDirectories(image.toPath().getParent());
-    Files.writeString(image.toPath(), "test image");
+    File outputDirectory = new File("./images").getCanonicalFile();
     mainVerticle = new MainVerticle(outputDirectory);
     mainVerticle.previewFiles(Arrays.asList(dsl));
   }
@@ -41,6 +38,23 @@ public class MainVerticleTest extends DslFileTestBase {
   @Test
   public void getFiles() {
     assertEquals(1, mainVerticle.getFiles().size());
+  }
+
+  @Test
+  public void listImages(VertxTestContext testContext) {
+    testContext.verify(
+        () -> {
+          MainVerticle relativeVerticle = new MainVerticle(new File("images"));
+          relativeVerticle.previewFiles(Arrays.asList(new File("demo.dsl")));
+          List<File> images = relativeVerticle.listImages();
+          images.sort(File::compareTo);
+          assertEquals(
+              Arrays.asList(
+                  new File("images/structurizr-PriceTracker-Container.png"),
+                  new File("images/structurizr-PriceTracker-SystemContext.png")),
+              images);
+          testContext.completeNow();
+        });
   }
 
   @Test
@@ -70,14 +84,14 @@ public class MainVerticleTest extends DslFileTestBase {
                     HttpMethod.GET,
                     3000,
                     "localhost",
-                    "/images/structurizr-Vertx-SystemContext.png"))
+                    "/images/structurizr-PriceTracker-SystemContext.png"))
         .compose(HttpClientRequest::send)
-        .compose(HttpClientResponse::body)
         .onSuccess(
-            body -> {
+            response -> {
               testContext.verify(
                   () -> {
-                    assertEquals("test image", body.toString());
+                    assertEquals(200, response.statusCode());
+                    assertEquals("image/png", response.getHeader("Content-Type"));
                   });
             })
         .onComplete(testContext.succeedingThenComplete())
