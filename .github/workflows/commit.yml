@@ -1,16 +1,51 @@
 name: commit
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
-  build:
+  test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+
+        - uses: actions/setup-java@v2
+          with:
+            distribution: 'temurin'
+            java-version: 17
+
+        - name: Run tests
+          uses: extenda/actions/maven@v0
+          with:
+            args: verify
+            version: pom.xml
+            service-account-key: ${{ secrets.SECRET_AUTH }}
+
+        - name: Scan with SonarCloud
+          uses: extenda/actions/sonar-scanner@v0
+          with:
+            sonar-host: https://sonarcloud.io
+            sonar-scanner: maven
+            main-branch: master
+            service-account-key: ${{ secrets.SECRET_AUTH }}
+
+  release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v2
         with:
-          fetch-depth: 0
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Build
+        uses: extenda/actions/maven@v0
+        with:
+          args: package -DskipTests
+          version: pom.xml
+          service-account-key: ${{ secrets.SECRET_AUTH }}
 
       - uses: extenda/actions/gcp-secret-manager@v0
         with:
@@ -20,7 +55,6 @@ jobs:
             DOCKER_USERNAME: dockerhub-username
 
       - name: Push to DockerHub
-        if: github.ref == 'refs/heads/master'
         uses: extenda/actions/docker@v0
         with:
           image: extenda/structurizr-to-png

@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <title>structurizr-to-png</title>
+  <script src="https://unpkg.io/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
+  <script src="https://unpkg.io/@vertx/eventbus-bridge-client.js@1.0.0-1/vertx-eventbus.js"></script>
+
+  <script>
+    function showImage(id) {
+      document.querySelectorAll('#images > div').forEach(function h(d) { d.style.display = 'none'; });
+      document.getElementById(id).style.display = 'block';
+      document.querySelectorAll('a').forEach(function n(a) { a.style.fontWeight = ''; });
+      document.getElementById('nav.' + id).style.fontWeight = 'bold';
+    }
+
+    function removeNodes(nodes) {
+      nodes.forEach(function fn(node) {
+        node.parentNode.removeChild(node);
+      });
+    }
+
+    function createImageDiv(name, image) {
+      const div = document.createElement('div');
+      div.setAttribute('id', name)
+      div.setAttribute('style', 'display: none');
+      div.innerHTML = '<img src="' + image + '">';
+      document.getElementById('images').appendChild(div);
+    }
+
+    function createNavLink(name) {
+      const li = document.createElement('li');
+      li.innerHTML = '<a id="nav.' + name + '" onClick="showImage(\'' + name + '\')">' + name + '</a>';
+      document.getElementById('navbar').appendChild(li);
+    }
+
+    const eb = new EventBus('/eventbus');
+    eb.enableReconnect(true);
+    eb.onopen = function onopen() {
+      eb.registerHandler('preview.init', function handle(error, message) {
+        // Remove existing nodes
+        if (message.body.images) {
+          removeNodes(document.querySelectorAll("#images > div"));
+          removeNodes(document.querySelectorAll("#navbar > li"));
+        }
+
+        // Build new content
+        Object.keys(message.body.images).forEach(function each(name) {
+          const image = message.body.images[name];
+          createImageDiv(name, image);
+          createNavLink(name);
+        });
+        const images = document.querySelectorAll("#images > div")
+        if (images.length > 0) {
+          showImage(images[0].getAttribute('id'));
+        }
+      });
+      eb.registerHandler('preview.changed', function handle(error, message) {
+        Object.keys(message.body.images).forEach(function each(name) {
+          const image = message.body.images[name];
+          const imgDiv = document.getElementById(name);
+          if (imgDiv) {
+            imgDiv.querySelector('img').setAttribute("src", image);
+          } else {
+            createImageDiv(name, image);
+            createNavLink(name);
+          }
+        });
+      });
+    };
+
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    img {
+      display: block;
+      margin: auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    a {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<ul id="navbar">
+</ul>
+<hr>
+<div id="images"></div>
+</body>
+</html>
