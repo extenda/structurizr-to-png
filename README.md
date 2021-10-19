@@ -13,16 +13,7 @@ to render Structurizr DSL to PNG images. It performs some post-processing of the
   * Create PNGs from DSL files
   * Live preview of PNGs in your browser
 
-### Examples
-
-The examples are created from [demo.dsl](demo.dsl).
-
-#### System context
-
-![System context](images/structurizr-PriceTracker-SystemContext.png)
-
-#### Containers
-![Container view](images/structurizr-PriceTracker-Container.png)
+The [examples](#examples) section showcases the output from the tool.
 
 # Usage
 
@@ -85,6 +76,17 @@ $ docker run --rm -it -v $(pwd):/docs -p 3000:3000 extenda/structurizr-to-png --
 ```
 
 Open https://localhost:3000 in your browser to see the preview images. The images will update when the DSL is changed.
+
+# Examples
+
+The examples are created from [demo.dsl](demo.dsl).
+
+## System context
+
+![System context](images/structurizr-PriceTracker-SystemContext.png)
+
+## Containers
+![Container view](images/structurizr-PriceTracker-Container.png)
 
 # Development
 
