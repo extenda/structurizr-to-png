@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-public class PngExporterTest extends DslFileTestBase {
+class PngExporterTest extends DslFileTestBase {
 
   private SourceStringReader sourceStringReader;
   private PngExporter exporter;
@@ -41,8 +41,7 @@ public class PngExporterTest extends DslFileTestBase {
   }
 
   @Test
-  public void successfulPngExport(TestInfo testInfo)
-      throws IOException, StructurizrDslParserException {
+  void successfulPngExport(TestInfo testInfo) throws IOException, StructurizrDslParserException {
     File dslFile = new File("test.dsl");
 
     Workspace workspace = new Workspace("test", "Test");
@@ -62,7 +61,7 @@ public class PngExporterTest extends DslFileTestBase {
   }
 
   @Test
-  public void failingPngExport() throws IOException, StructurizrDslParserException {
+  void failingPngExport() throws IOException, StructurizrDslParserException {
     File dslFile = new File("test.dsl");
     when(workspaceReader.loadFromDsl(dslFile)).thenThrow(new IOException("Test parse error"));
     exporter.setOutputDirectory(new File("/tmp/exporter/images"));

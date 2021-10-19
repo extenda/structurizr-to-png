@@ -30,7 +30,7 @@ public class WorkspaceReader {
 
   /** Predicate to check if a software system is tagged as existing or external. */
   private final Predicate<SoftwareSystem> hasExternalTag =
-      (s) -> {
+      s -> {
         Set<String> tags =
             Stream.of(s.getTags().toLowerCase().split(","))
                 .map(String::trim)
@@ -74,7 +74,7 @@ public class WorkspaceReader {
     workspace.getModel().getSoftwareSystems().stream()
         .filter(hasExternalTag)
         .forEach(
-            (s) -> {
+            s -> {
               s.setLocation(Location.External);
             });
   }

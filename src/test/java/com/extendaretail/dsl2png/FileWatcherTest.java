@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FileWatcherTest {
+class FileWatcherTest {
 
   private WatchService ws;
   private FileWatcher watcher;
@@ -35,7 +35,7 @@ public class FileWatcherTest {
   }
 
   @Test
-  public void notifyOnChange() throws IOException, InterruptedException {
+  void notifyOnChange() throws IOException, InterruptedException {
     Path mockPath = mock(Path.class);
     File mockFile = mock(File.class);
     Path mockParent = mock(Path.class);

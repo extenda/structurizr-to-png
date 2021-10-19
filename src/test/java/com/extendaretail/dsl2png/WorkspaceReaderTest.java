@@ -18,7 +18,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(VertxExtension.class)
-public class WorkspaceReaderTest extends DslFileTestBase {
+class WorkspaceReaderTest extends DslFileTestBase {
 
   private Integer httpPort;
 
@@ -32,7 +32,7 @@ public class WorkspaceReaderTest extends DslFileTestBase {
   }
 
   @Test
-  public void dslWithValidSyntax(TestInfo testInfo, Vertx verx, VertxTestContext testContext)
+  void dslWithValidSyntax(TestInfo testInfo, Vertx verx, VertxTestContext testContext)
       throws Exception {
     testContext.verify(
         () -> {
@@ -51,8 +51,7 @@ public class WorkspaceReaderTest extends DslFileTestBase {
   }
 
   @Test
-  public void dslWithSyntaxError(TestInfo testInfo, VertxTestContext testContext)
-      throws IOException {
+  void dslWithSyntaxError(TestInfo testInfo, VertxTestContext testContext) throws IOException {
     testContext.verify(
         () -> {
           try {

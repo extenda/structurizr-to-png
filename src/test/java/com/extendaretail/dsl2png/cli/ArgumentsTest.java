@@ -9,46 +9,46 @@ import com.extendaretail.dsl2png.cli.Arguments.HelpException;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 
-public class ArgumentsTest {
+class ArgumentsTest {
 
   @Test
-  public void defaultPath() throws HelpException {
+  void defaultPath() throws HelpException {
     Arguments args = Arguments.parse(new String[0]);
     assertEquals("**/*.dsl", args.getPath());
   }
 
   @Test
-  public void setPath() throws HelpException {
+  void setPath() throws HelpException {
     Arguments args = Arguments.parse(new String[] {"--path=demo.dsl"});
     assertEquals("demo.dsl", args.getPath());
   }
 
   @Test
-  public void isWatch() throws HelpException {
+  void isWatch() throws HelpException {
     Arguments args = Arguments.parse(new String[] {"--watch"});
     assertTrue(args.isWatch());
   }
 
   @Test
-  public void defaultNoWatch() throws HelpException {
+  void defaultNoWatch() throws HelpException {
     Arguments args = Arguments.parse(new String[0]);
     assertFalse(args.isWatch());
   }
 
   @Test
-  public void defaultOutput() throws HelpException {
+  void defaultOutput() throws HelpException {
     Arguments args = Arguments.parse(new String[0]);
     assertEquals(new File("images"), args.getOutput());
   }
 
   @Test
-  public void setOutput() throws HelpException {
+  void setOutput() throws HelpException {
     Arguments args = Arguments.parse(new String[] {"-o", "c4-diagrams"});
     assertEquals(new File("c4-diagrams"), args.getOutput());
   }
 
   @Test
-  public void helpUsage() {
+  void helpUsage() {
     try {
       Arguments.parse(new String[] {"--help"});
       fail("Expected help exception");
@@ -58,7 +58,7 @@ public class ArgumentsTest {
   }
 
   @Test
-  public void helpIllegalArgs() {
+  void helpIllegalArgs() {
     try {
       Arguments.parse(new String[] {"--missing"});
       fail("Expected help exception");

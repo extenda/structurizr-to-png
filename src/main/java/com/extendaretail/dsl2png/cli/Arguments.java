@@ -95,7 +95,7 @@ public class Arguments {
 
   public static class HelpException extends Exception {
     private static final long serialVersionUID = 1L;
-    private int exitCode;
+    private final int exitCode;
 
     public HelpException(String message, int exitCode) {
       super(message);

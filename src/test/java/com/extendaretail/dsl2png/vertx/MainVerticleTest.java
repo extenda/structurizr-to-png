@@ -25,7 +25,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(VertxExtension.class)
-public class MainVerticleTest extends DslFileTestBase {
+class MainVerticleTest extends DslFileTestBase {
 
   private MainVerticle mainVerticle;
   private Integer httpPort;
@@ -43,7 +43,7 @@ public class MainVerticleTest extends DslFileTestBase {
   }
 
   @Test
-  public void getFiles(VertxTestContext testContext) {
+  void getFiles(VertxTestContext testContext) {
     testContext.verify(
         () -> {
           assertEquals(1, mainVerticle.getFiles().size());
@@ -52,7 +52,7 @@ public class MainVerticleTest extends DslFileTestBase {
   }
 
   @Test
-  public void listImages(VertxTestContext testContext) {
+  void listImages(VertxTestContext testContext) {
     testContext.verify(
         () -> {
           MainVerticle relativeVerticle = new MainVerticle(new File("images"));
@@ -69,7 +69,7 @@ public class MainVerticleTest extends DslFileTestBase {
   }
 
   @Test
-  public void serveIndexHtml(Vertx vertx, VertxTestContext testContext) {
+  void serveIndexHtml(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     vertx
         .deployVerticle(mainVerticle, config)
@@ -85,7 +85,7 @@ public class MainVerticleTest extends DslFileTestBase {
   }
 
   @Test
-  public void serveImageFile(Vertx vertx, VertxTestContext testContext) {
+  void serveImageFile(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     vertx
         .deployVerticle(mainVerticle, config)
@@ -110,7 +110,7 @@ public class MainVerticleTest extends DslFileTestBase {
   }
 
   @Test
-  public void serveMissingImage(Vertx vertx, VertxTestContext testContext) {
+  void serveMissingImage(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     vertx
         .deployVerticle(mainVerticle, config)
@@ -131,7 +131,7 @@ public class MainVerticleTest extends DslFileTestBase {
   }
 
   @Test
-  public void serveInitEvent(Vertx vertx, VertxTestContext testContext) {
+  void serveInitEvent(Vertx vertx, VertxTestContext testContext) {
     HttpClient client = vertx.createHttpClient();
     Buffer payload =
         new JsonObject(

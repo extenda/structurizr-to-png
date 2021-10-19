@@ -9,10 +9,10 @@ import com.structurizr.model.SoftwareSystem;
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
-public class C4PlantUMLDynamicLegendExporterTest {
+class C4PlantUMLDynamicLegendExporterTest {
 
   @Test
-  public void itRendersDynamicLegend() {
+  void itRendersDynamicLegend() {
     Workspace workspace = new Workspace("test", "Test");
     SoftwareSystem testSystem = workspace.getModel().addSoftwareSystem("Test System");
     workspace.getViews().createSystemContextView(testSystem, "TestSystem-SystemContext", null);

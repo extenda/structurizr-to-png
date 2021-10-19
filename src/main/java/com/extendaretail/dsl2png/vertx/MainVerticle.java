@@ -40,12 +40,12 @@ public class MainVerticle extends AbstractVerticle {
     if (outputDirectory.isAbsolute()) {
       stream = Stream.of(outputDirectory);
     } else {
-      stream = files.stream().map((f) -> new File(f.getParentFile(), outputDirectory.getPath()));
+      stream = files.stream().map(f -> new File(f.getParentFile(), outputDirectory.getPath()));
     }
 
     return stream
         .flatMap(
-            (f) ->
+            f ->
                 Stream.of(
                     Optional.ofNullable(f.listFiles((dir, name) -> name.endsWith(".png")))
                         .orElse(new File[0])))
@@ -99,7 +99,7 @@ public class MainVerticle extends AbstractVerticle {
 
   private Optional<File> findImage(String imagePath) {
     String name = Path.of(imagePath).getFileName().toString();
-    return listImages().stream().filter((f) -> f.getName().equals(name)).findFirst();
+    return listImages().stream().filter(f -> f.getName().equals(name)).findFirst();
   }
   ;
 
@@ -136,7 +136,7 @@ public class MainVerticle extends AbstractVerticle {
     router
         .route("/images/*")
         .handler(
-            (ctx) ->
+            ctx ->
                 findImage(ctx.request().path())
                     .map(File::getPath)
                     .ifPresentOrElse(

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-public class ClientTest {
+class ClientTest {
 
   private PngExporter exporter;
   private FileGlobber globber;
@@ -41,7 +41,7 @@ public class ClientTest {
   }
 
   @Test
-  public void run() {
+  void run() {
     Client cli = new Client(exporter, globber, watcher);
     assertTrue(cli.run(new String[0]), () -> "Expected success, was failure");
     verify(globber).match("**/*.dsl");
@@ -49,7 +49,7 @@ public class ClientTest {
   }
 
   @Test
-  public void watch() {
+  void watch() {
     Client cli = new Client(exporter, globber, watcher);
 
     ArgumentCaptor<Consumer<File>> captor = ArgumentCaptor.forClass(Consumer.class);
@@ -65,7 +65,7 @@ public class ClientTest {
   }
 
   @Test
-  public void showHelp() {
+  void showHelp() {
     Client cli = new Client();
     boolean result = cli.run(new String[] {"--help"});
     assertTrue(result, () -> "--help should exit with 0");

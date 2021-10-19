@@ -10,24 +10,24 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
-public class FileGlobberTest extends DslFileTestBase {
+class FileGlobberTest extends DslFileTestBase {
 
   private FileGlobber glob = new FileGlobber();
 
   @Test
-  public void noMatch() {
+  void noMatch() {
     List<File> match = glob.match("nomatch.dsl");
     assertTrue(match.isEmpty());
   }
 
   @Test
-  public void invalidRootDirectory() {
+  void invalidRootDirectory() {
     List<File> match = glob.match("/missing/**/*.dsl");
     assertTrue(match.isEmpty());
   }
 
   @Test
-  public void multiMatch(TestInfo testInfo) throws IOException {
+  void multiMatch(TestInfo testInfo) throws IOException {
     File validDsl = createValidDsl(testInfo);
     File invalidDsl = createInvalidDsl(testInfo);
     List<File> match = glob.match(validDsl.getParent() + "/*.dsl");
@@ -38,13 +38,13 @@ public class FileGlobberTest extends DslFileTestBase {
   }
 
   @Test
-  public void defaultMatch() throws IOException {
+  void defaultMatch() throws IOException {
     List<File> match = glob.match("**/*.dsl");
     assertTrue(match.contains(new File("./demo.dsl")), () -> "Matches should include demo.dsl");
   }
 
   @Test
-  public void exactMatch(TestInfo testInfo) throws IOException {
+  void exactMatch(TestInfo testInfo) throws IOException {
     File validDsl = createValidDsl(testInfo);
     List<File> match = glob.match(validDsl.getPath());
     assertEquals(Arrays.asList(new File(".", validDsl.getPath())), match);
