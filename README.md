@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=extenda_structurizr-to-png&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=extenda_structurizr-to-png)
+
 # structurizr-to-png
 
 Create PNGs from [Structurizr DSL](https://github.com/structurizr/dsl#readme) files.

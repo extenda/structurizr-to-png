@@ -32,6 +32,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    needs:
+      - test
     steps:
       - uses: actions/checkout@v2
 
