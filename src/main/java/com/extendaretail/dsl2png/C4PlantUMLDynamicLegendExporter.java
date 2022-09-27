@@ -1,7 +1,7 @@
 package com.extendaretail.dsl2png;
 
-import com.structurizr.io.IndentingWriter;
-import com.structurizr.io.plantuml.C4PlantUMLExporter;
+import com.structurizr.export.IndentingWriter;
+import com.structurizr.export.plantuml.C4PlantUMLExporter;
 import com.structurizr.view.View;
 
 /**

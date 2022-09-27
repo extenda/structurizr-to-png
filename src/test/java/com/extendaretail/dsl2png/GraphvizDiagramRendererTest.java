@@ -10,9 +10,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.structurizr.io.AbstractDiagramExporter;
-import com.structurizr.io.Diagram;
-import com.structurizr.io.dot.DOTExporter;
+import com.structurizr.export.AbstractDiagramExporter;
+import com.structurizr.export.Diagram;
+import com.structurizr.export.dot.DOTExporter;
 import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;

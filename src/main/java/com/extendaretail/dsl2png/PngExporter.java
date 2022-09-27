@@ -2,8 +2,8 @@ package com.extendaretail.dsl2png;
 
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParserException;
-import com.structurizr.io.AbstractDiagramExporter;
-import com.structurizr.io.Diagram;
+import com.structurizr.export.AbstractDiagramExporter;
+import com.structurizr.export.Diagram;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
