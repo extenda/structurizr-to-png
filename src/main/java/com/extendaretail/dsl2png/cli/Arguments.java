@@ -99,7 +99,7 @@ public class Arguments {
       arguments.watch = cmd.hasOption("watch");
       arguments.path = cmd.getOptionValue("path", "**/*.dsl");
       arguments.renderer =
-          Renderer.valueOf(cmd.getOptionValue("render-with", Renderer.graphviz.name()));
+          Renderer.valueOf(cmd.getOptionValue("render-with", Renderer.plantuml.name()));
       if (cmd.hasOption("help")) {
         throw new HelpException(help(opts), 0);
       }
