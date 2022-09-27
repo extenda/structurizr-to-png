@@ -10,6 +10,14 @@ import com.structurizr.view.View;
  * @author sasjo
  */
 public class C4PlantUMLDynamicLegendExporter extends C4PlantUMLExporter {
+
+  @Override
+  protected void writeHeader(View view, IndentingWriter writer) {
+    super.writeHeader(view, writer);
+    //    writer.writeLine("skinparam linetype ortho");
+    //    writer.writeLine();
+  }
+
   @Override
   protected void writeFooter(View view, IndentingWriter writer) {
     writer.writeLine();

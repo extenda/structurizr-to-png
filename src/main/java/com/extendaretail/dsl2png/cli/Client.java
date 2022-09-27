@@ -2,6 +2,8 @@ package com.extendaretail.dsl2png.cli;
 
 import com.extendaretail.dsl2png.FileGlobber;
 import com.extendaretail.dsl2png.FileWatcher;
+import com.extendaretail.dsl2png.GraphvizDiagramRenderer;
+import com.extendaretail.dsl2png.PlantUMLDiagramRenderer;
 import com.extendaretail.dsl2png.PngExporter;
 import com.extendaretail.dsl2png.PngExporter.ExportResult;
 import com.extendaretail.dsl2png.cli.Arguments.HelpException;
@@ -29,7 +31,10 @@ public class Client {
   private FileWatcher watcher;
 
   public Client() {
-    this(new PngExporter(DEFAULT_PORT), new FileGlobber(), new FileWatcher());
+    this(
+        new PngExporter(DEFAULT_PORT, new PlantUMLDiagramRenderer()),
+        new FileGlobber(),
+        new FileWatcher());
   }
 
   public Client(PngExporter exporter, FileGlobber globber, FileWatcher watcher) {
@@ -55,6 +60,9 @@ public class Client {
         new DeploymentOptions().setConfig(new JsonObject().put("http.port", DEFAULT_PORT)));
 
     exporter.setOutputDirectory(args.getOutput());
+    if (args.getRenderer() == Arguments.Renderer.graphviz) {
+      exporter.setDiagramRenderer(new GraphvizDiagramRenderer());
+    }
     List<File> files = globber.match(args.getPath());
 
     if (files.isEmpty()) {

@@ -23,6 +23,9 @@ public class Arguments {
   /** DSL glob path. */
   private String path;
 
+  /** Image renderer. */
+  private Renderer renderer = Renderer.plantuml;
+
   private Arguments() {}
 
   public File getOutput() {
@@ -35,6 +38,10 @@ public class Arguments {
 
   public boolean isWatch() {
     return watch;
+  }
+
+  public Renderer getRenderer() {
+    return renderer;
   }
 
   private static String help(Options opts) {
@@ -76,6 +83,13 @@ public class Arguments {
             .type(String.class)
             .desc("Path to workspaces to render. Glob is supported.")
             .build());
+    opts.addOption(
+        Option.builder("r")
+            .longOpt("render-with")
+            .hasArg()
+            .type(Renderer.class)
+            .desc("The name of the diagram renderer to use.")
+            .build());
     opts.addOption(Option.builder().longOpt("help").build());
 
     Arguments arguments = new Arguments();
@@ -84,6 +98,8 @@ public class Arguments {
       arguments.output = cmd.getOptionValue("output", "images");
       arguments.watch = cmd.hasOption("watch");
       arguments.path = cmd.getOptionValue("path", "**/*.dsl");
+      arguments.renderer =
+          Renderer.valueOf(cmd.getOptionValue("render-with", Renderer.graphviz.name()));
       if (cmd.hasOption("help")) {
         throw new HelpException(help(opts), 0);
       }
@@ -105,5 +121,10 @@ public class Arguments {
     public int getExitCode() {
       return exitCode;
     }
+  }
+
+  public enum Renderer {
+    plantuml,
+    graphviz,
   }
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -13,31 +14,27 @@ import static org.mockito.Mockito.when;
 import com.extendaretail.dsl2png.PngExporter.ExportResult;
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParserException;
+import com.structurizr.io.AbstractDiagramExporter;
+import com.structurizr.io.Diagram;
 import com.structurizr.model.SoftwareSystem;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import net.sourceforge.plantuml.FileFormatOption;
-import net.sourceforge.plantuml.SourceStringReader;
-import net.sourceforge.plantuml.core.DiagramDescription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 class PngExporterTest extends DslFileTestBase {
 
-  private SourceStringReader sourceStringReader;
   private PngExporter exporter;
   private WorkspaceReader workspaceReader;
+  private DiagramRenderer diagramRenderer;
 
   @BeforeEach
-  public void setUp() throws IOException {
-    sourceStringReader = mock(SourceStringReader.class);
-    when(sourceStringReader.outputImage(any(OutputStream.class), any(FileFormatOption.class)))
-        .thenReturn(new DiagramDescription("test"));
-
+  public void setUp() {
+    diagramRenderer = spy(new MockDiagramRenderer());
+    when(diagramRenderer.createDiagramExporter()).thenReturn(new C4PlantUMLDynamicLegendExporter());
     workspaceReader = mock(WorkspaceReader.class);
-    exporter = new PngExporter(workspaceReader, (source, charset) -> sourceStringReader);
+    exporter = new PngExporter(workspaceReader, diagramRenderer);
   }
 
   @Test
@@ -56,17 +53,29 @@ class PngExporterTest extends DslFileTestBase {
     ExportResult export = exporter.export(dslFile);
     assertTrue(export.isSuccess());
     assertEquals(2, export.getImages().size());
-    verify(sourceStringReader, times(2))
-        .outputImage(any(OutputStream.class), any(FileFormatOption.class));
+    verify(diagramRenderer, times(2)).renderDiagram(any(Diagram.class), any(File.class));
   }
 
   @Test
-  void failingPngExport() throws IOException, StructurizrDslParserException {
+  void failingPngExportWithDslParseError() throws IOException, StructurizrDslParserException {
     File dslFile = new File("test.dsl");
     when(workspaceReader.loadFromDsl(dslFile)).thenThrow(new IOException("Test parse error"));
     exporter.setOutputDirectory(new File("/tmp/exporter/images"));
     ExportResult export = exporter.export(dslFile);
     assertFalse(export.isSuccess());
-    verifyNoInteractions(sourceStringReader);
+    verifyNoInteractions(diagramRenderer);
+  }
+
+  public static class MockDiagramRenderer implements DiagramRenderer {
+
+    @Override
+    public AbstractDiagramExporter createDiagramExporter() {
+      return new C4PlantUMLDynamicLegendExporter();
+    }
+
+    @Override
+    public void renderDiagram(Diagram diagram, File outputFile) throws IOException {
+      // Do nothing.
+    }
   }
 }
