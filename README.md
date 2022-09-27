@@ -4,8 +4,9 @@
 
 Create PNGs from [Structurizr DSL](https://github.com/structurizr/dsl#readme) files.
 
-This project uses [PlantUML](https://plantuml.com) and the [C4-PlantUML macros](https://github.com/plantuml-stdlib/C4-PlantUML)
-to render Structurizr DSL to PNG images. It performs some post-processing of the workspace model to support conventions around external software systems.
+This project uses [PlantUML](https://plantuml.com) or [Graphviz](https://graphviz.org) to render Structurizr DSL to PNG
+images with various rendering strategies. Image rendering is based on exports from the Structurizr CLI. The project
+performs some post-processing of the workspace model to support conventions around external software systems.
 
   * Tags are mapped to shapes in the [`theme.json`](./src/main/resources/themes/theme.json)
   * Systems tagged with `External`, `External System` or `Existing System` will be rendered as external
@@ -15,7 +16,7 @@ to render Structurizr DSL to PNG images. It performs some post-processing of the
   * Create PNGs from DSL files
   * Live preview of PNGs in your browser
   * Support for multiple renderers with `--render-with` flag
-    * `c4plantuml` - C4 PlantUML (**default**)
+    * `c4plantuml` - [C4-PlantUML](https://github.com/plantuml-stdlib/C4-PlantUML) (**default**)
     * `graphviz` - Dot with Graphviz
     * `structurizr` - Structurizr PlantUML
 
@@ -23,11 +24,13 @@ The [examples](#examples) section showcases the output from the tool.
 
 # Usage
 
-The project is intended to be used locally while authoring diagrams and in build pipelines workflows to automatically update diagrams in the source repository and READMEs.
+The project is intended to be used locally while authoring diagrams and in build pipelines workflows to automatically
+update diagrams in the source repository and READMEs.
 
 ## :rocket: Helper scripts
 
-The easiest way to get started with the project is to create a helper script. If using bash, create the following script and name it `dsl2png.sh`.
+The easiest way to get started with the project is to create a helper script. If using bash, create the following script
+and name it `dsl2png.sh`.
 
 ```bash
 #!/bin/sh
@@ -45,7 +48,8 @@ docker pull --quiet extenda/structurizr-to-png
 docker run --rm -it -v "%CD%":/docs -p 3000:3000 extenda/structurizr-to-png %*
 ```
 
-With these scripts, users will be upgraded to the latest available version and also don't need to remember the lengthly docker command. To watch a directory for changes to DSL files, simply run:
+With these scripts, users will be upgraded to the latest available version and also don't need to remember the lengthy
+docker command. To watch a directory for changes to DSL files, simply run:
 
 ```bash
 ./dsl2png.sh --watch
@@ -57,7 +61,9 @@ With these scripts, users will be upgraded to the latest available version and a
 $ docker run --rm -it -v $(pwd):/docs extenda/structurizr-to-png
 ```
 
-The convention is to generate diagrams to an `images/` directory inside the working directory. The default working directory used in the container is `/docs`. The above command will render all `*.dsl` files in the current working directory and it's subdirectories.
+The convention is to generate diagrams to an `images/` directory inside the working directory. The default working
+directory used in the container is `/docs`. The above command will render all `*.dsl` files in the current working
+directory and it's subdirectories.
 
 To render particular dsl files, use the `--path` option (glob is supported). Relative paths are treated from DSL file directory.
 
@@ -65,7 +71,8 @@ To render particular dsl files, use the `--path` option (glob is supported). Rel
 $ docker run --rm -it -v $(pwd):/docs extenda/structurizr-to-png --path workspace.ecd.dsl
 ```
 
-To change the default output location, use the `--output` option. If specified as a relative path, it is resolved from DSL file directory.
+To change the default output location, use the `--output` option. If specified as a relative path, it is resolved from
+DSL file directory.
 
 ```bash
 $ docker run --rm -it -v $(pwd):/docs extenda/structurizr-to-png --output c4-diagrams
