@@ -1,5 +1,6 @@
 package com.extendaretail.dsl2png.vertx;
 
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,8 +36,9 @@ class MainVerticleTest extends DslFileTestBase {
   public void beforeEach(TestInfo testInfo) throws IOException {
     File dsl = createValidDsl(testInfo);
     File outputDirectory = new File("./images").getAbsoluteFile();
+
     mainVerticle = new MainVerticle(outputDirectory);
-    mainVerticle.previewFiles(Arrays.asList(dsl));
+    mainVerticle.previewFiles(singletonList(dsl));
 
     config = LocalPort.getLocalPort();
     httpPort = config.getConfig().getInteger("http.port");
@@ -56,9 +58,8 @@ class MainVerticleTest extends DslFileTestBase {
     testContext.verify(
         () -> {
           MainVerticle relativeVerticle = new MainVerticle(new File("images"));
-          relativeVerticle.previewFiles(Arrays.asList(new File("demo.dsl")));
+          relativeVerticle.previewFiles(List.of(new File("demo.dsl")));
           List<File> images = relativeVerticle.listImages();
-          images.sort(File::compareTo);
           assertEquals(
               Arrays.asList(
                   new File("images/structurizr-PriceTracker-Container.png"),
