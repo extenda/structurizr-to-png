@@ -24,7 +24,7 @@ public class Arguments {
   private String path;
 
   /** Image renderer. */
-  private Renderer renderer = Renderer.plantuml;
+  private Renderer renderer = Renderer.c4plantuml;
 
   private Arguments() {}
 
@@ -99,7 +99,7 @@ public class Arguments {
       arguments.watch = cmd.hasOption("watch");
       arguments.path = cmd.getOptionValue("path", "**/*.dsl");
       arguments.renderer =
-          Renderer.valueOf(cmd.getOptionValue("render-with", Renderer.plantuml.name()));
+          Renderer.valueOf(cmd.getOptionValue("render-with", Renderer.c4plantuml.name()));
       if (cmd.hasOption("help")) {
         throw new HelpException(help(opts), 0);
       }
@@ -124,7 +124,8 @@ public class Arguments {
   }
 
   public enum Renderer {
-    plantuml,
+    c4plantuml,
+    structurizr,
     graphviz,
   }
 }
