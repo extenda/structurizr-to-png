@@ -48,6 +48,12 @@ class ArgumentsTest {
   }
 
   @Test
+  void setRenderer() throws HelpException {
+    Arguments args = Arguments.parse(new String[] {"-r", "graphviz"});
+    assertEquals(Arguments.Renderer.graphviz, args.getRenderer());
+  }
+
+  @Test
   void helpUsage() {
     try {
       Arguments.parse(new String[] {"--help"});

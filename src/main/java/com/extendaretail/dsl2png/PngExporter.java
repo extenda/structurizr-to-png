@@ -2,21 +2,14 @@ package com.extendaretail.dsl2png;
 
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParserException;
+import com.structurizr.io.AbstractDiagramExporter;
 import com.structurizr.io.Diagram;
-import com.structurizr.io.plantuml.AbstractPlantUMLExporter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.FileFormatOption;
-import net.sourceforge.plantuml.SourceStringReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,18 +20,18 @@ import org.slf4j.LoggerFactory;
  */
 public class PngExporter {
 
-  private Logger log = LoggerFactory.getLogger(PngExporter.class);
+  private static final Logger log = LoggerFactory.getLogger(PngExporter.class);
   private File outputDirectory;
-  private WorkspaceReader workspaceReader;
-  private SourceStringReaderFactory plantUmlFactory;
+  private final WorkspaceReader workspaceReader;
+  private DiagramRenderer diagramRenderer;
 
-  public PngExporter(int themesPort) {
-    this(new WorkspaceReader(themesPort), SourceStringReader::new);
+  public PngExporter(int themesPort, DiagramRenderer diagramRenderer) {
+    this(new WorkspaceReader(themesPort), diagramRenderer);
   }
 
-  public PngExporter(WorkspaceReader workspaceReader, SourceStringReaderFactory plantUmlFactory) {
+  public PngExporter(WorkspaceReader workspaceReader, DiagramRenderer diagramRenderer) {
     this.workspaceReader = workspaceReader;
-    this.plantUmlFactory = plantUmlFactory;
+    this.diagramRenderer = diagramRenderer;
   }
 
   public void setOutputDirectory(File outputDirectory) {
@@ -65,10 +58,10 @@ public class PngExporter {
       File imageOutputDir = getOutputDirectory(dslFile);
       imageOutputDir.mkdirs();
       log.debug("Export PNGs to {}", imageOutputDir);
-      AbstractPlantUMLExporter exporter = new C4PlantUMLDynamicLegendExporter();
+      AbstractDiagramExporter exporter = diagramRenderer.createDiagramExporter();
       ExportResult result =
           exporter.export(workspace).parallelStream()
-              .map(diagram -> writePngImage(diagram, dslFile, imageOutputDir))
+              .map(diagram -> writeImage(diagram, dslFile, imageOutputDir))
               .reduce(new ExportResult(true), ExportResult::merge);
 
       log.info("Exported {} images", result.getImages().size());
@@ -76,23 +69,20 @@ public class PngExporter {
     }
   }
 
-  private ExportResult writePngImage(Diagram diagram, File dslFile, File imageOutputDir) {
+  private ExportResult writeImage(Diagram diagram, File dslFile, File imageOutputDir) {
     try (DslFileMDC c = new DslFileMDC(dslFile)) {
       long t0 = System.currentTimeMillis();
-      File pngFile =
-          new File(imageOutputDir, String.format("structurizr-%s.png", diagram.getKey()));
-      try (OutputStream os = new FileOutputStream(pngFile)) {
-        SourceStringReader reader =
-            plantUmlFactory.newInstance(diagram.getDefinition(), StandardCharsets.UTF_8);
-        reader.outputImage(os, new FileFormatOption(FileFormat.PNG));
+      File outputFile = diagramRenderer.getOutputFileName(diagram, imageOutputDir);
+      try {
+        diagramRenderer.renderDiagram(diagram, outputFile);
       } catch (IOException e) {
-        log.error("Failed to write {}", pngFile, e);
-        return new ExportResult(false, pngFile);
+        log.error("Failed to write {}", outputFile, e);
+        return new ExportResult(false, outputFile);
       }
       if (log.isInfoEnabled()) {
-        log.info("{} {}", pngFile, durationMillis(t0));
+        log.info("{} {}", outputFile, durationMillis(t0));
       }
-      return new ExportResult(true, pngFile);
+      return new ExportResult(true, outputFile);
     }
   }
 
@@ -100,9 +90,8 @@ public class PngExporter {
     return System.currentTimeMillis() - t0 + "ms";
   }
 
-  @FunctionalInterface
-  public static interface SourceStringReaderFactory {
-    SourceStringReader newInstance(String definition, Charset charset);
+  public void setDiagramRenderer(DiagramRenderer diagramRenderer) {
+    this.diagramRenderer = diagramRenderer;
   }
 
   public static class ExportResult {

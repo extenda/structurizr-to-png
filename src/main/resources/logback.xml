@@ -6,6 +6,7 @@
     </encoder>
   </appender>
   <logger name="com.extendaretail" level="INFO"/>
+  <logger name="guru.nidi.graphviz" level="ERROR"/>
   <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>

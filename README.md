@@ -14,6 +14,9 @@ to render Structurizr DSL to PNG images. It performs some post-processing of the
 
   * Create PNGs from DSL files
   * Live preview of PNGs in your browser
+  * Support for multiple renderers with `--render-with` flag
+    * `plantuml` - default
+    * `graphviz`
 
 The [examples](#examples) section showcases the output from the tool.
 
