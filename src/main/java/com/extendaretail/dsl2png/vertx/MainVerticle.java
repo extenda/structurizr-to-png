@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,9 +48,13 @@ public class MainVerticle extends AbstractVerticle {
         .flatMap(
             f ->
                 Stream.of(
-                    Optional.ofNullable(f.listFiles((dir, name) -> name.endsWith(".png")))
+                    Optional.ofNullable(
+                            f.listFiles(
+                                (dir, name) ->
+                                    name.endsWith(".png") && name.startsWith("structurizr-")))
                         .orElse(new File[0])))
-        .collect(Collectors.toList());
+        .sorted()
+        .toList();
   }
 
   /**
@@ -59,7 +64,7 @@ public class MainVerticle extends AbstractVerticle {
    */
   public void previewFiles(List<File> files) {
     if (this.files.isEmpty()) {
-      log.info("Access URL\n\n\thttp://localhost:" + listenPort + "\n");
+      log.info("Access URL\n\n\thttp://localhost:{}\n", listenPort);
       this.files.addAll(files);
     }
   }
@@ -85,11 +90,12 @@ public class MainVerticle extends AbstractVerticle {
 
     Map<String, String> webImages =
         images.stream()
-            .sorted()
             .collect(
                 Collectors.toMap(
                     File::getName,
-                    f -> "/images/" + f.getName() + "?" + System.currentTimeMillis()));
+                    f -> "/images/" + f.getName() + "?" + System.currentTimeMillis(),
+                    (a, b) -> b,
+                    TreeMap::new));
 
     json.put("type", type);
     json.put("images", webImages);
@@ -101,10 +107,9 @@ public class MainVerticle extends AbstractVerticle {
     String name = Path.of(imagePath).getFileName().toString();
     return listImages().stream().filter(f -> f.getName().equals(name)).findFirst();
   }
-  ;
 
   @Override
-  public void start(Promise<Void> startPromise) throws Exception {
+  public void start(Promise<Void> startPromise) {
     SockJSHandler sockJSHandler =
         SockJSHandler.create(
             vertx,
