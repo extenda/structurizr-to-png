@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.structurizr.Workspace;
-import com.structurizr.io.Diagram;
+import com.structurizr.export.Diagram;
 import com.structurizr.model.SoftwareSystem;
 import java.util.Collection;
 import org.junit.jupiter.api.Test;

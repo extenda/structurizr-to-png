@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.structurizr.io.Diagram;
+import com.structurizr.export.Diagram;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;

@@ -2,9 +2,9 @@ package com.extendaretail.dsl2png;
 
 import static java.util.Arrays.asList;
 
-import com.structurizr.io.AbstractDiagramExporter;
-import com.structurizr.io.Diagram;
-import com.structurizr.io.dot.DOTExporter;
+import com.structurizr.export.AbstractDiagramExporter;
+import com.structurizr.export.Diagram;
+import com.structurizr.export.dot.DOTExporter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

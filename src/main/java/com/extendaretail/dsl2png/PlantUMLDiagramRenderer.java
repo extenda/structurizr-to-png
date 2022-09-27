@@ -1,7 +1,7 @@
 package com.extendaretail.dsl2png;
 
-import com.structurizr.io.AbstractDiagramExporter;
-import com.structurizr.io.Diagram;
+import com.structurizr.export.AbstractDiagramExporter;
+import com.structurizr.export.Diagram;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
