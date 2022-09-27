@@ -117,7 +117,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-junit5</artifactId>
-      <version>4.1.5</version>
+      <version>4.3.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
