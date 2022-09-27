@@ -1,6 +1,5 @@
 package com.extendaretail.dsl2png;
 
-import com.structurizr.export.AbstractDiagramExporter;
 import com.structurizr.export.Diagram;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,30 +12,26 @@ import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
 
 /**
- * Render a diagram with PlantUML. The C4 structurizr exporter is used as DSL exporter.
+ * Abstract diagram renderer for PlantUML exporters.
  *
  * @author sasjo
  */
-public class PlantUMLDiagramRenderer implements DiagramRenderer {
+public abstract class AbstractPlantUMLDiagramRenderer implements DiagramRenderer {
 
-  private SourceStringReaderFactory plantUmlFactory;
+  private AbstractPlantUMLDiagramRenderer.SourceStringReaderFactory plantUmlFactory;
 
   @FunctionalInterface
   public interface SourceStringReaderFactory {
     SourceStringReader newInstance(String definition, Charset charset);
   }
 
-  public PlantUMLDiagramRenderer() {
+  protected AbstractPlantUMLDiagramRenderer() {
     this(SourceStringReader::new);
   }
 
-  public PlantUMLDiagramRenderer(SourceStringReaderFactory plantUmlFactory) {
+  protected AbstractPlantUMLDiagramRenderer(
+      AbstractPlantUMLDiagramRenderer.SourceStringReaderFactory plantUmlFactory) {
     this.plantUmlFactory = plantUmlFactory;
-  }
-
-  @Override
-  public AbstractDiagramExporter createDiagramExporter() {
-    return new C4PlantUMLDynamicLegendExporter();
   }
 
   @Override

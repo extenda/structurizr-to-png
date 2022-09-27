@@ -1,13 +1,12 @@
 package com.extendaretail.dsl2png;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.structurizr.export.AbstractDiagramExporter;
 import com.structurizr.export.Diagram;
 import java.io.File;
 import java.io.IOException;
@@ -18,15 +17,15 @@ import net.sourceforge.plantuml.core.DiagramDescription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PlantUMLDiagramRendererTest {
+class AbstractPlantUMLDiagramRendererTest {
 
   private SourceStringReader sourceStringReader;
-  private PlantUMLDiagramRenderer diagramRenderer;
+  private AbstractPlantUMLDiagramRenderer diagramRenderer;
 
   @BeforeEach
   public void setUp() {
     sourceStringReader = mock(SourceStringReader.class);
-    diagramRenderer = new PlantUMLDiagramRenderer((source, charset) -> sourceStringReader);
+    diagramRenderer = new MockPlantUMLDiagramRenderer((source, charset) -> sourceStringReader);
   }
 
   @Test
@@ -35,11 +34,6 @@ class PlantUMLDiagramRendererTest {
     when(diagram.getKey()).thenReturn("diagram-name");
     File result = diagramRenderer.getOutputFileName(diagram, new File("target"));
     assertEquals(result, new File("target", "structurizr-diagram-name.png"));
-  }
-
-  @Test
-  void createDiagramExporter() {
-    assertDoesNotThrow(diagramRenderer::createDiagramExporter);
   }
 
   @Test
@@ -62,5 +56,19 @@ class PlantUMLDiagramRendererTest {
     File outputFile = new File("out.png");
     Diagram diagram = mock(Diagram.class);
     assertThrows(IOException.class, () -> diagramRenderer.renderDiagram(diagram, outputFile));
+  }
+
+  public static class MockPlantUMLDiagramRenderer extends AbstractPlantUMLDiagramRenderer {
+
+    private final AbstractDiagramExporter exporter = mock(AbstractDiagramExporter.class);
+
+    public MockPlantUMLDiagramRenderer(SourceStringReaderFactory plantUmlFactory) {
+      super(plantUmlFactory);
+    }
+
+    @Override
+    public AbstractDiagramExporter createDiagramExporter() {
+      return exporter;
+    }
   }
 }
