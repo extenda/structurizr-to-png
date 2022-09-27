@@ -53,6 +53,7 @@ public class MainVerticle extends AbstractVerticle {
                                 (dir, name) ->
                                     name.endsWith(".png") && name.startsWith("structurizr-")))
                         .orElse(new File[0])))
+        .sorted()
         .toList();
   }
 
