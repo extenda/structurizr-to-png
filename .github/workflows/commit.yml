@@ -28,7 +28,7 @@ jobs:
             sonar-scanner: maven
             main-branch: master
             service-account-key: ${{ secrets.SECRET_AUTH }}
-        
+
         - name: build docker
           run: docker buildx build -t extenda/structurizr-to-png .
 
