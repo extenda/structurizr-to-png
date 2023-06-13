@@ -1,6 +1,8 @@
 package com.extendaretail.dsl2png;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.extendaretail.dsl2png.vertx.MainVerticle;
 import com.structurizr.Workspace;
@@ -32,14 +34,13 @@ class WorkspaceReaderTest extends DslFileTestBase {
   }
 
   @Test
-  void dslWithValidSyntax(TestInfo testInfo, Vertx verx, VertxTestContext testContext)
-      throws Exception {
+  void dslWithValidSyntax(TestInfo testInfo, Vertx vertx, VertxTestContext testContext) {
     testContext.verify(
         () -> {
           Workspace workspace = new WorkspaceReader(httpPort).loadFromDsl(createValidDsl(testInfo));
 
           assertEquals(2, workspace.getModel().getSoftwareSystems().size());
-          assertEquals(2, workspace.getViews().getViews().size());
+          assertEquals(4, workspace.getViews().getViews().size());
 
           // Location should've been decorated.
           assertEquals(
@@ -54,14 +55,14 @@ class WorkspaceReaderTest extends DslFileTestBase {
   void dslWithSyntaxError(TestInfo testInfo, VertxTestContext testContext) throws IOException {
     testContext.verify(
         () -> {
-          try {
-            new WorkspaceReader(httpPort).loadFromDsl(createInvalidDsl(testInfo));
-            testContext.failNow("Expected parse error");
-          } catch (StructurizrDslParserException e) {
-            assertEquals(
-                "Unexpected tokens at line 3: user = personX \"User\" \"A user\"", e.getMessage());
-            testContext.completeNow();
-          }
+          StructurizrDslParserException e =
+              assertThrows(
+                  StructurizrDslParserException.class,
+                  () -> new WorkspaceReader(httpPort).loadFromDsl(createInvalidDsl(testInfo)));
+          assertThat(e)
+              .hasMessageContaining("Unexpected tokens")
+              .hasMessageContaining("at line 3: user = personX \"User\" \"A user\"");
+          testContext.completeNow();
         });
   }
 }

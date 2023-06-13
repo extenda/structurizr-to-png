@@ -12,6 +12,8 @@ import java.io.IOException;
  */
 public interface DiagramRenderer {
 
+  String DIAGRAM_NAME_PROPERTY = "diagram.basename";
+
   /**
    * Create the output file name for a diagram.
    *
@@ -20,8 +22,9 @@ public interface DiagramRenderer {
    * @return the diagram image output filename.
    */
   default File getOutputFileName(Diagram diagram, File parentDirectory) {
-    return new File(
-        parentDirectory, String.format("structurizr-%s.%s", diagram.getKey(), getImageExtension()));
+    String baseName =
+        diagram.getView().getProperties().getOrDefault(DIAGRAM_NAME_PROPERTY, diagram.getKey());
+    return new File(parentDirectory, "structurizr-%s.%s".formatted(baseName, getImageExtension()));
   }
 
   /**

@@ -39,7 +39,12 @@ public class DslFileTestBase {
           model {
             user = person "User" "A user"
             existing = softwareSystem "Existing System" "Legacy system" "Existing System"
-            test = softwareSystem "Test System" "My System"
+            test = softwareSystem "Test System" "My System" {
+              testContainer = container "Test Container" {
+                testComponent = component "Test Component"
+              }
+
+            }
 
             user -> test "Uses"
             test -> existing "Uses"
@@ -51,6 +56,14 @@ public class DslFileTestBase {
             }
 
             container test {
+              include *
+            }
+
+            component testContainer {
+              include *
+            }
+
+            container test user-defined-name {
               include *
             }
           }

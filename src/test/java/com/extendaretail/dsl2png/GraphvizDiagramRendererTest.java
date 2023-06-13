@@ -1,6 +1,7 @@
 package com.extendaretail.dsl2png;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.when;
 import com.structurizr.export.AbstractDiagramExporter;
 import com.structurizr.export.Diagram;
 import com.structurizr.export.dot.DOTExporter;
+import com.structurizr.view.View;
 import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +34,9 @@ class GraphvizDiagramRendererTest {
   @Test
   void getOutputFileName() {
     Diagram diagram = mock(Diagram.class);
+    View view = mock(View.class);
+    when(diagram.getView()).thenReturn(view);
+    when(view.getProperties()).thenReturn(emptyMap());
     when(diagram.getKey()).thenReturn("diagram-name");
     File result = diagramRenderer.getOutputFileName(diagram, new File("target"));
     assertEquals(result, new File("target", "structurizr-diagram-name.png"));

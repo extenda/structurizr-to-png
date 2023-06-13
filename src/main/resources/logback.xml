@@ -5,9 +5,10 @@
       <pattern>[%highlight(%level)] %cyan(%X{dsl:-*}) %msg%n%ex{SHORT}</pattern>
     </encoder>
   </appender>
-  <logger name="com.extendaretail" level="INFO"/>
-  <logger name="guru.nidi.graphviz" level="ERROR"/>
-  <root level="INFO">
+  <logger name="com.extendaretail" level="info"/>
+  <logger name="guru.nidi.graphviz" level="error"/>
+  <logger name="com.structurizr.dsl.AbstractViewParser" level="error"/>
+  <root level="info">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

@@ -5,7 +5,13 @@ import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.model.Location;
 import com.structurizr.model.SoftwareSystem;
+import com.structurizr.view.ComponentView;
+import com.structurizr.view.ContainerView;
+import com.structurizr.view.ModelView;
+import com.structurizr.view.SystemContextView;
+import com.structurizr.view.SystemLandscapeView;
 import com.structurizr.view.ThemeUtils;
+import com.structurizr.view.View;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -48,7 +54,50 @@ public class WorkspaceReader {
     Workspace workspace = parseDsl(dslFile);
     addTheme(workspace);
     setExternalLocation(workspace);
+    workspace
+        .getViews()
+        .getViews()
+        .forEach(
+            view ->
+                view.addProperty(
+                    DiagramRenderer.DIAGRAM_NAME_PROPERTY, generateViewBasename(view)));
+
     return workspace;
+  }
+
+  /**
+   * Generate a predicate basename for exported views. The generated view cannot be trusted and has
+   * changed over time in Structurizr. If an explicit key is defined it will be used, otherwise a
+   * backwards compatible name is generated.
+   *
+   * @return the base filename for the exportable view
+   */
+  private String generateViewBasename(View view) {
+    if (isGeneratedKey(view)) {
+      if (view instanceof SystemLandscapeView) {
+        return "SystemLandscape";
+      }
+      if (view instanceof SystemContextView systemContext) {
+        return generateViewBasename(systemContext, "SystemContext");
+      }
+      if (view instanceof ContainerView containerView) {
+        return generateViewBasename(containerView, "Container");
+      }
+      if (view instanceof ComponentView componentView) {
+        return generateViewBasename(componentView, componentView.getContainerId(), "Component");
+      }
+    }
+    return view.getKey();
+  }
+
+  private boolean isGeneratedKey(View view) {
+    return view.getKey().matches("^(SystemLandscape|SystemContext|Container|Component)-\\d{3}$");
+  }
+
+  private String generateViewBasename(ModelView view, String... name) {
+    String systemId = view.getSoftwareSystem().getName().replaceAll("\\s", "");
+    final String delimiter = "-";
+    return systemId + delimiter + String.join(delimiter, name);
   }
 
   private Workspace parseDsl(File dslFile) throws StructurizrDslParserException {
