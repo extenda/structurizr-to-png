@@ -34,14 +34,13 @@ class WorkspaceReaderTest extends DslFileTestBase {
   }
 
   @Test
-  void dslWithValidSyntax(TestInfo testInfo, Vertx verx, VertxTestContext testContext)
-      throws Exception {
+  void dslWithValidSyntax(TestInfo testInfo, Vertx vertx, VertxTestContext testContext) {
     testContext.verify(
         () -> {
           Workspace workspace = new WorkspaceReader(httpPort).loadFromDsl(createValidDsl(testInfo));
 
           assertEquals(2, workspace.getModel().getSoftwareSystems().size());
-          assertEquals(2, workspace.getViews().getViews().size());
+          assertEquals(4, workspace.getViews().getViews().size());
 
           // Location should've been decorated.
           assertEquals(
