@@ -29,6 +29,9 @@ jobs:
             main-branch: master
             service-account-key: ${{ secrets.SECRET_AUTH }}
 
+        - name: build docker
+          run: docker buildx build -t extenda/structurizr-to-png .
+
   release:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
