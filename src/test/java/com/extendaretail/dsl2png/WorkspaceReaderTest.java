@@ -1,6 +1,8 @@
 package com.extendaretail.dsl2png;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.extendaretail.dsl2png.vertx.MainVerticle;
 import com.structurizr.Workspace;
@@ -54,14 +56,14 @@ class WorkspaceReaderTest extends DslFileTestBase {
   void dslWithSyntaxError(TestInfo testInfo, VertxTestContext testContext) throws IOException {
     testContext.verify(
         () -> {
-          try {
-            new WorkspaceReader(httpPort).loadFromDsl(createInvalidDsl(testInfo));
-            testContext.failNow("Expected parse error");
-          } catch (StructurizrDslParserException e) {
-            assertEquals(
-                "Unexpected tokens at line 3: user = personX \"User\" \"A user\"", e.getMessage());
-            testContext.completeNow();
-          }
+          StructurizrDslParserException e =
+              assertThrows(
+                  StructurizrDslParserException.class,
+                  () -> new WorkspaceReader(httpPort).loadFromDsl(createInvalidDsl(testInfo)));
+          assertThat(e)
+              .hasMessageContaining("Unexpected tokens")
+              .hasMessageContaining("at line 3: user = personX \"User\" \"A user\"");
+          testContext.completeNow();
         });
   }
 }

@@ -1,5 +1,6 @@
 package com.extendaretail.dsl2png;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -8,9 +9,11 @@ import static org.mockito.Mockito.when;
 
 import com.structurizr.export.AbstractDiagramExporter;
 import com.structurizr.export.Diagram;
+import com.structurizr.view.View;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.SourceStringReader;
 import net.sourceforge.plantuml.core.DiagramDescription;
@@ -29,11 +32,26 @@ class AbstractPlantUMLDiagramRendererTest {
   }
 
   @Test
-  void getOutputFileName() {
+  void getOutputFileNameFromKey() {
     Diagram diagram = mock(Diagram.class);
+    View view = mock(View.class);
+    when(diagram.getView()).thenReturn(view);
+    when(view.getProperties()).thenReturn(emptyMap());
     when(diagram.getKey()).thenReturn("diagram-name");
     File result = diagramRenderer.getOutputFileName(diagram, new File("target"));
     assertEquals(result, new File("target", "structurizr-diagram-name.png"));
+    verify(diagram).getKey();
+  }
+
+  @Test
+  void getOutputFileNameFromProperties() {
+    Diagram diagram = mock(Diagram.class);
+    View view = mock(View.class);
+    when(diagram.getView()).thenReturn(view);
+    when(view.getProperties())
+        .thenReturn(Map.of(DiagramRenderer.DIAGRAM_NAME_PROPERTY, "default-name"));
+    File result = diagramRenderer.getOutputFileName(diagram, new File("target"));
+    assertEquals(result, new File("target", "structurizr-default-name.png"));
   }
 
   @Test
