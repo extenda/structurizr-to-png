@@ -124,7 +124,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-tcp-eventbus-bridge</artifactId>
-      <version>4.3.3</version>
+      <version>${version.vertx}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
