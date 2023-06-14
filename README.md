@@ -137,7 +137,7 @@ The examples are created from [demo.dsl](demo.dsl).
 # Appearance
 
 All renderers support Structurizr themes. The theme must be reachable on a public URL. If no theme is specified
-a [default theme](./src/main/resources/themes/theme.json) will be used.
+the [dsl-to-png theme](./src/main/resources/themes/theme.json) will be used.
 
 Renderers may also support output options, typically controlled with view properties.
 
