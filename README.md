@@ -19,6 +19,7 @@ performs some post-processing of the workspace model to support conventions arou
     * `c4plantuml` - [C4-PlantUML](https://github.com/plantuml-stdlib/C4-PlantUML) (**default**)
     * `graphviz` - Dot with Graphviz
     * `structurizr` - Structurizr PlantUML
+  * Control [appearance](#appearance) with themes and view properties
 
 The [examples](#examples) section showcases the output from the tool.
 
@@ -37,7 +38,6 @@ and name it `dsl2png.sh`.
 set -e
 docker pull --quiet extenda/structurizr-to-png
 exec docker run --rm -it -v "$(pwd)":/docs -p 3000:3000 extenda/structurizr-to-png "$@"
-
 ```
 
 Or, if you're using Windows, create `dsl2png.cmd`.
@@ -94,12 +94,84 @@ Open https://localhost:3000 in your browser to see the preview images. The image
 
 The examples are created from [demo.dsl](demo.dsl).
 
-## System context
+### System context
 
-![System context](images/structurizr-PriceTracker-SystemContext.png)
+<details open>
+<summary><b>C4PlantUML</b></summary>
 
-## Containers
-![Container view](images/structurizr-PriceTracker-Container.png)
+![System context](images/c4plantuml/structurizr-PriceTracker-SystemContext.png)
+</details>
+
+<details>
+<summary><b>Graphviz</b></summary>
+
+![System context](images/graphviz/structurizr-PriceTracker-SystemContext.png)
+</details>
+
+<details>
+<summary><b>Structurizr</b></summary>
+
+![System context](images/structurizr/structurizr-PriceTracker-SystemContext.png)
+</details>
+
+### Containers
+
+<details open>
+<summary><b>C4PlantUML</b></summary>
+
+![Container view](images/c4plantuml/structurizr-PriceTracker-Container.png)
+</details>
+
+<details>
+<summary><b>Graphviz</b></summary>
+
+![Container view](images/graphviz/structurizr-PriceTracker-Container.png)
+</details>
+
+<details>
+<summary><b>Structurizr</b></summary>
+
+![Container view](images/structurizr/structurizr-PriceTracker-Container.png)
+</details>
+
+# Appearance
+
+All renderers support Structurizr themes. The theme must be reachable on a public URL. If no theme is specified
+a [default theme](./src/main/resources/themes/theme.json) will be used.
+
+Renderers may also support output options, typically controlled with view properties.
+
+## C4PlantUML options
+
+The following view properties are supported with the `c4plantuml` renderer.
+
+| Property            | Default Value | Description                      |
+|---------------------|---------------|----------------------------------|
+| `c4plantuml.legend` | `true`        | Include a dynamic diagram legend |
+| `plantuml.title`    | `true`        | Include the diagram title        |
+
+Here's an example on how to use them to disable the diagram legend and the title.
+
+```
+views {
+  container system {
+    include *
+    properties {
+      c4plantuml.legend false
+      plantuml.title false
+    }
+  }
+}
+```
+
+## Structurizr options
+
+The following view properties are supported with the `structurizr` renderer.
+
+| Property          | Default Value | Description                 |
+|-------------------|---------------|-----------------------------|
+| `plantuml.shadow` | `false`       | Render elements with shadow |
+| `plantuml.title`  | `true`        | Include the diagram title   |
 
 # Development
 
