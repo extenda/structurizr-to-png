@@ -35,7 +35,7 @@ class MainVerticleTest extends DslFileTestBase {
   @BeforeEach
   public void beforeEach(TestInfo testInfo) throws IOException {
     File dsl = createValidDsl(testInfo);
-    File outputDirectory = new File("./images").getAbsoluteFile();
+    File outputDirectory = new File("./images/c4plantuml").getAbsoluteFile();
 
     mainVerticle = new MainVerticle(outputDirectory);
     mainVerticle.previewFiles(singletonList(dsl));
@@ -57,13 +57,13 @@ class MainVerticleTest extends DslFileTestBase {
   void listImages(VertxTestContext testContext) {
     testContext.verify(
         () -> {
-          MainVerticle relativeVerticle = new MainVerticle(new File("images"));
+          MainVerticle relativeVerticle = new MainVerticle(new File("images/c4plantuml"));
           relativeVerticle.previewFiles(List.of(new File("demo.dsl")));
           List<File> images = relativeVerticle.listImages();
           assertEquals(
               Arrays.asList(
-                  new File("images/structurizr-PriceTracker-Container.png"),
-                  new File("images/structurizr-PriceTracker-SystemContext.png")),
+                  new File("images/c4plantuml/structurizr-PriceTracker-Container.png"),
+                  new File("images/c4plantuml/structurizr-PriceTracker-SystemContext.png")),
               images);
           testContext.completeNow();
         });
