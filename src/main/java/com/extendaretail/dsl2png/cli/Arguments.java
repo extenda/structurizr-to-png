@@ -9,6 +9,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 public class Arguments {
 
@@ -90,6 +93,13 @@ public class Arguments {
             .type(Renderer.class)
             .desc("The name of the diagram renderer to use.")
             .build());
+    opts.addOption(
+        Option.builder()
+            .longOpt("log-level")
+            .hasArg()
+            .type(Level.class)
+            .desc("Log verbosity level")
+            .build());
     opts.addOption(Option.builder().longOpt("help").build());
 
     Arguments arguments = new Arguments();
@@ -102,6 +112,12 @@ public class Arguments {
           Renderer.valueOf(cmd.getOptionValue("render-with", Renderer.c4plantuml.name()));
       if (cmd.hasOption("help")) {
         throw new HelpException(help(opts), 0);
+      }
+      Level logLevel = Level.valueOf(cmd.getOptionValue("log-level", Level.INFO.name()));
+      Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+      if (logger instanceof ch.qos.logback.classic.Logger logbackLogger
+          && (logbackLogger.getLevel().toInt() != logLevel.toInt())) {
+        logbackLogger.setLevel(ch.qos.logback.classic.Level.valueOf(logLevel.name()));
       }
     } catch (ParseException e) {
       throw new HelpException(help(opts), 1);
