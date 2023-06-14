@@ -99,19 +99,19 @@ The examples are created from [demo.dsl](demo.dsl).
 <details open>
 <summary><b>C4PlantUML</b></summary>
 
-![System context](images/structurizr-PriceTracker-SystemContext.png)
+![System context](images/c4plantuml/structurizr-PriceTracker-SystemContext.png)
 </details>
 
 <details>
 <summary><b>Graphviz</b></summary>
 
-![System context](images/structurizr-PriceTracker-SystemContext.png)
+![System context](images/graphviz/structurizr-PriceTracker-SystemContext.png)
 </details>
 
 <details>
 <summary><b>Structurizr</b></summary>
 
-![System context](images/structurizr-PriceTracker-SystemContext.png)
+![System context](images/structurizr/structurizr-PriceTracker-SystemContext.png)
 </details>
 
 ### Containers
@@ -119,19 +119,19 @@ The examples are created from [demo.dsl](demo.dsl).
 <details open>
 <summary><b>C4PlantUML</b></summary>
 
-![Container view](images/structurizr-PriceTracker-Container.png)
+![Container view](images/c4plantuml/structurizr-PriceTracker-Container.png)
 </details>
 
 <details>
 <summary><b>Graphviz</b></summary>
 
-![Container view](images/structurizr-PriceTracker-Container.png)
+![Container view](images/graphviz/structurizr-PriceTracker-Container.png)
 </details>
 
 <details>
 <summary><b>Structurizr</b></summary>
 
-![Container view](images/structurizr-PriceTracker-Container.png)
+![Container view](images/structurizr/structurizr-PriceTracker-Container.png)
 </details>
 
 # Appearance
