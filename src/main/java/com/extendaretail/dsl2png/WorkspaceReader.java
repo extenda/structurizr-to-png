@@ -6,6 +6,7 @@ import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.model.Location;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.ComponentView;
+import com.structurizr.view.Configuration;
 import com.structurizr.view.ContainerView;
 import com.structurizr.view.ModelView;
 import com.structurizr.view.SystemContextView;
@@ -108,10 +109,11 @@ public class WorkspaceReader {
   }
 
   private void addTheme(Workspace workspace) throws IOException {
-    workspace
-        .getViews()
-        .getConfiguration()
-        .addTheme("http://127.0.0.1:" + themePort + "/themes/theme.json");
+    Configuration config = workspace.getViews().getConfiguration();
+    if (config.getThemes().length == 0) {
+      log.debug("Add default 'dsl-to-png theme' theme");
+      config.addTheme("http://127.0.0.1:" + themePort + "/themes/theme.json");
+    }
     try {
       ThemeUtils.loadThemes(workspace);
     } catch (Exception e) {
