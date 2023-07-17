@@ -77,7 +77,7 @@
     <dependency>
       <groupId>com.structurizr</groupId>
       <artifactId>structurizr-dsl</artifactId>
-      <version>1.30.2</version>
+      <version>1.30.4</version>
     </dependency>
     <dependency>
       <groupId>com.structurizr</groupId>
