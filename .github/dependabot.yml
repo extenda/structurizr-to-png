@@ -4,3 +4,15 @@ updates:
     directory: '/'
     schedule:
       interval: weekly
+    groups:
+      maven:
+        patterns:
+          - '*'
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: daily
+    groups:
+      workflows:
+        patterns:
+          - '*'
