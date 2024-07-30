@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.extendaretail.dsl2png.vertx.MainVerticle;
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParserException;
-import com.structurizr.model.Location;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
@@ -42,11 +41,6 @@ class WorkspaceReaderTest extends DslFileTestBase {
           assertEquals(2, workspace.getModel().getSoftwareSystems().size());
           assertEquals(4, workspace.getViews().getViews().size());
 
-          // Location should've been decorated.
-          assertEquals(
-              Location.External,
-              workspace.getModel().getSoftwareSystemWithName("Existing System").getLocation());
-
           testContext.completeNow();
         });
   }
@@ -61,7 +55,8 @@ class WorkspaceReaderTest extends DslFileTestBase {
                   () -> new WorkspaceReader(httpPort).loadFromDsl(createInvalidDsl(testInfo)));
           assertThat(e)
               .hasMessageContaining("Unexpected tokens")
-              .hasMessageContaining("at line 3: user = personX \"User\" \"A user\"");
+              .hasMessageContaining("at line 3")
+              .hasMessageContaining("user = personX \"User\" \"A user\"");
           testContext.completeNow();
         });
   }

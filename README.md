@@ -5,11 +5,10 @@
 Create PNGs from [Structurizr DSL](https://github.com/structurizr/dsl#readme) files.
 
 This project uses [PlantUML](https://plantuml.com) or [Graphviz](https://graphviz.org) to render Structurizr DSL to PNG
-images with various rendering strategies. Image rendering is based on exports from the Structurizr CLI. The project
-performs some post-processing of the workspace model to support conventions around external software systems.
+images with various rendering strategies. Image rendering is based on exports from the Structurizr CLI.
 
-  * Tags are mapped to shapes in the [`theme.json`](./src/main/resources/themes/theme.json)
-  * Systems tagged with `External`, `External System` or `Existing System` will be rendered as external
+A default [`theme.json`](./src/main/resources/themes/theme.json) is used when no user provided theme is referenced. The
+default theme maps tags to shapes and has some conventions around external systems.
 
 ## Features
 
