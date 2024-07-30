@@ -49,6 +49,15 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <?SORTPOM IGNORE?>
+      <!-- Logging must be imported before vertx. -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-bom</artifactId>
+        <version>2.0.13</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
@@ -56,6 +65,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <?SORTPOM RESUME?>
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
@@ -90,11 +100,6 @@
         <artifactId>structurizr-export</artifactId>
         <version>1.15.0</version>
       </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>2.0.13</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -102,7 +107,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.11</version>
+      <version>1.5.6</version>
     </dependency>
     <dependency>
       <groupId>com.structurizr</groupId>
@@ -142,7 +147,10 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>2.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
