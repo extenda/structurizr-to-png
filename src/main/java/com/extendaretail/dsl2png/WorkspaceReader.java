@@ -3,7 +3,6 @@ package com.extendaretail.dsl2png;
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
-import com.structurizr.model.Location;
 import com.structurizr.model.SoftwareSystem;
 import com.structurizr.view.ComponentView;
 import com.structurizr.view.Configuration;
@@ -54,7 +53,7 @@ public class WorkspaceReader {
   public Workspace loadFromDsl(File dslFile) throws IOException, StructurizrDslParserException {
     Workspace workspace = parseDsl(dslFile);
     addTheme(workspace);
-    setExternalLocation(workspace);
+    // setExternalLocation(workspace);
     workspace
         .getViews()
         .getViews()
@@ -121,12 +120,12 @@ public class WorkspaceReader {
     }
   }
 
-  private void setExternalLocation(Workspace workspace) {
-    workspace.getModel().getSoftwareSystems().stream()
-        .filter(hasExternalTag)
-        .forEach(
-            s -> {
-              s.setLocation(Location.External);
-            });
-  }
+  //  private void setExternalLocation(Workspace workspace) {
+  //    workspace.getModel().getSoftwareSystems().stream()
+  //        .filter(hasExternalTag)
+  //        .forEach(
+  //            s -> {
+  //              s.setLocation(Location.External);
+  //            });
+  //  }
 }

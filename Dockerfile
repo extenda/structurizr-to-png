@@ -11,4 +11,4 @@ EXPOSE 3000
 
 WORKDIR /docs
 
-CMD ["java", "-jar", "/app/structurizr-to-png.jar"]
+ENTRYPOINT ["/opt/java/openjdk/bin/java", "-jar", "/app/structurizr-to-png.jar"]
