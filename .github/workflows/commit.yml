@@ -5,11 +5,11 @@ jobs:
   test:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v4
           with:
             fetch-depth: 0
 
-        - uses: actions/setup-java@v2
+        - uses: actions/setup-java@v4
           with:
             distribution: 'temurin'
             java-version: 17
@@ -38,9 +38,9 @@ jobs:
     needs:
       - test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
