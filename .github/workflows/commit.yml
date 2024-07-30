@@ -12,7 +12,7 @@ jobs:
         - uses: actions/setup-java@v4
           with:
             distribution: 'temurin'
-            java-version: 17
+            java-version-file: .java-version
 
         - name: Run tests
           uses: extenda/actions/maven@v0
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version-file: .java-version
 
       - name: Build
         uses: extenda/actions/maven@v0

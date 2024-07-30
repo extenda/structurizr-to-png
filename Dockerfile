@@ -1,6 +1,8 @@
-FROM eclipse-temurin:17-centos7
+FROM eclipse-temurin:21
 
-RUN yum -y install graphviz
+RUN apt update \
+    && apt -y install graphviz \
+    && apt clean
 
 COPY target/lib /app/lib
 COPY target/*.jar /app
@@ -9,4 +11,4 @@ EXPOSE 3000
 
 WORKDIR /docs
 
-ENTRYPOINT ["/opt/java/openjdk/bin/java", "-jar", "/app/structurizr-to-png.jar"]
+CMD ["java", "-jar", "/app/structurizr-to-png.jar"]

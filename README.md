@@ -175,7 +175,7 @@ The following view properties are supported with the `structurizr` renderer.
 
 # Development
 
-  * The project is built with Java 17 and Maven.
+  * The project is built with Java 21 and Maven.
     * `mvn verify` to build and run all tests
     * `java -jar target/structurizr-to-png.jar` runs the client on your local machine
   * Running locally requires Graphviz

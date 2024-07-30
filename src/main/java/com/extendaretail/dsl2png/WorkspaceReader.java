@@ -67,9 +67,9 @@ public class WorkspaceReader {
   }
 
   /**
-   * Generate a predicate basename for exported views. The generated view cannot be trusted and has
-   * changed over time in Structurizr. If an explicit key is defined it will be used, otherwise a
-   * backwards compatible name is generated.
+   * Generate a predictable basename for exported views. The generated view cannot be trusted and
+   * has changed over time in Structurizr. If an explicit key is defined it will be used, otherwise
+   * a backwards compatible name is generated.
    *
    * @return the base filename for the exportable view
    */
