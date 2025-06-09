@@ -119,23 +119,24 @@ public class MainVerticle extends AbstractVerticle {
 
     PermittedOptions previewEvent = new PermittedOptions().setAddressRegex("preview\\..+");
 
-    router.mountSubRouter(
-        "/eventbus",
-        sockJSHandler.bridge(
-            new SockJSBridgeOptions().addOutboundPermitted(previewEvent),
-            be -> {
-              if (be.type() == BridgeEventType.REGISTERED
-                  && "preview.init".equals(be.getRawMessage().getString("address"))) {
-                be.socket()
-                    .write(
-                        new JsonObject()
-                            .put("type", "publish")
-                            .put("address", "preview.init")
-                            .put("body", imagesEvent("init", listImages()))
-                            .toBuffer());
-              }
-              be.complete(true);
-            }));
+    router
+        .route("/eventbus/*")
+        .subRouter(
+            sockJSHandler.bridge(
+                new SockJSBridgeOptions().addOutboundPermitted(previewEvent),
+                be -> {
+                  if (be.type() == BridgeEventType.REGISTERED
+                      && "preview.init".equals(be.getRawMessage().getString("address"))) {
+                    be.socket()
+                        .write(
+                            new JsonObject()
+                                .put("type", "publish")
+                                .put("address", "preview.init")
+                                .put("body", imagesEvent("init", listImages()))
+                                .toBuffer());
+                  }
+                  be.complete(true);
+                }));
 
     router.route("/*").handler(StaticHandler.create("preview"));
     router
