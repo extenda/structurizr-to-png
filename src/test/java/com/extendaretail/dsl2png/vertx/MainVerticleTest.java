@@ -13,6 +13,7 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.WebSocketClient;
 import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -33,7 +34,7 @@ class MainVerticleTest extends DslFileTestBase {
   private DeploymentOptions config;
 
   @BeforeEach
-  public void beforeEach(TestInfo testInfo) throws IOException {
+  void beforeEach(TestInfo testInfo) throws IOException {
     File dsl = createValidDsl(testInfo);
     File outputDirectory = new File("./images/c4plantuml").getAbsoluteFile();
 
@@ -133,7 +134,7 @@ class MainVerticleTest extends DslFileTestBase {
 
   @Test
   void serveInitEvent(Vertx vertx, VertxTestContext testContext) {
-    HttpClient client = vertx.createHttpClient();
+    WebSocketClient client = vertx.createWebSocketClient();
     Buffer payload =
         new JsonObject(
                 """
@@ -144,9 +145,10 @@ class MainVerticleTest extends DslFileTestBase {
         }
         """)
             .toBuffer();
+
     vertx
         .deployVerticle(mainVerticle, config)
-        .compose(ignore -> client.webSocket(httpPort, "localhost", "/eventbus/websocket"))
+        .compose(ignore -> client.connect(httpPort, "localhost", "/eventbus/websocket"))
         .onSuccess(
             ws -> {
               ws.handler(
