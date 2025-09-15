@@ -61,7 +61,7 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
-        <version>5.0.3</version>
+        <version>5.0.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -137,7 +137,7 @@
     <dependency>
       <groupId>net.sourceforge.plantuml</groupId>
       <artifactId>plantuml</artifactId>
-      <version>1.2025.4</version>
+      <version>1.2025.7</version>
     </dependency>
     <dependency>
       <groupId>org.fusesource.jansi</groupId>
@@ -195,7 +195,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.3</version>
+        <version>3.5.4</version>
         <configuration>
           <argLine>@{argLine} -Dfile.encoding=UTF-8</argLine>
           <runOrder>random</runOrder>
